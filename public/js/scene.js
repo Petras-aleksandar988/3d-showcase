@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+
 
 const BACKGROUND_COLOR = 0xffffff;
 const AMBIENT_LIGHT_COLOR = 0xffffff;
@@ -67,5 +67,5 @@ export function animate(scene, camera, renderer, mixers) {
     renderer.render(scene, camera);
   }
 
-  render(); // Start the animation loop
+  render(); // Start animation loop
 }
