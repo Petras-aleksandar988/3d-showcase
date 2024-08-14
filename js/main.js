@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import { initScene, animate } from './scene.js';
 import { loadModel, changeModelColor } from './modelLoader.js';
-import { createAnnotation } from './annotation.js';
+import { annotationInteraction, createAnnotation } from './annotation.js';
 
-
+//globals
 const MODEL_PATH = '/models/ovini_chair.glb';
 let MATERIAL_NAME = '';
 let COLOR_HEX = '';
@@ -11,27 +11,22 @@ let COLOR_HEX = '';
 
 function init() {
     const canvas = document.getElementById('canvas');
-    const { scene, camera, renderer} = initScene(canvas);
+    const {scene, camera, renderer} = initScene(canvas);
 
     //Adding model to scene
     loadModel(scene, MODEL_PATH);
 
 
-    // Create annotations
-    const annotation1Position = new THREE.Vector3(0, 0.1, 0.5);
-    const annotation2Position = new THREE.Vector3(0, 0.5, -0.5);
-    const annotationTextureUrl = '/textures/toll-free.png';
-    const annotationColor = 0xff0000;
-    const annotationWidth = 0.2; 
-    const annotationHeight = 0.2; 
+    // Build annotations
+    const annotations1 = createAnnotation(scene, new THREE.Vector3(0, 0.1, 0.5), '/textures/toll-free.png');
 
-    createAnnotation(scene, camera, renderer, annotation1Position, annotationTextureUrl, annotationColor, () => {
-        console.log('Annotation 1 clicked!');
-    }, annotationWidth, annotationHeight);
+   
+    setupAnnotationToggle(annotations1, camera);
 
-    createAnnotation(scene, camera, renderer, annotation2Position, annotationTextureUrl, annotationColor, () => {
-        console.log('Annotation 2 clicked!');
-    }, annotationWidth, annotationHeight);
+    // annotationInteraction(camera, annotations1, ()=>{
+    //     console.log("annotation 1 clicked");
+    // });
+
 
     function resize() {
         const width = window.innerWidth;
@@ -59,6 +54,37 @@ init();
  */
 
 //#008000 green
+
+function setupAnnotationToggle(annotation, camera) {
+
+  //hide on start scene
+  setAnnotationVisibility(annotation, false);
+
+  document.querySelector('.configurator-btn').addEventListener('click', () => {
+      setAnnotationVisibility(annotation, false);
+
+      annotationInteraction(camera, annotation, () => {
+          console.log("annotation clicked");
+      }, false); 
+  });
+
+  document.querySelector('.animations-btn').addEventListener('click', () => {
+
+      setAnnotationVisibility(annotation, true);
+
+      annotationInteraction(camera, annotation, () => {
+          console.log("annotation clicked");
+      }, true); 
+
+      
+  
+  });
+}
+
+function setAnnotationVisibility(annotation, visible) {
+  annotation.visible = visible;
+
+} 
 
 // document.getElementById('button1').addEventListener('click', (event) => {
 //     MATERIAL_NAME = event.target.getAttribute('data-material');
