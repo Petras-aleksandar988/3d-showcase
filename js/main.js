@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { initScene, animate } from './scene.js';
 import { loadModel, changeModelColor } from './modelLoader.js';
 import { annotationInteraction, createAnnotation } from './annotation.js';
+import { animateCamera, reverseCameraAnimation } from './cameraAnimation.js';
 
 //globals
 const MODEL_PATH = '/models/ovini_chair.glb';
@@ -22,17 +23,10 @@ function init() {
       loadingOverlay.style.display = 'none';
   });
 
-
     // Build annotations
     const annotations1 = createAnnotation(scene, new THREE.Vector3(0, 0.1, 0.5), '/textures/toll-free.png');
 
-   
     setupAnnotationToggle(annotations1, camera);
-
-    // annotationInteraction(camera, annotations1, ()=>{
-    //     console.log("annotation 1 clicked");
-    // });
-
 
     function resize() {
         const width = window.innerWidth;
@@ -50,8 +44,6 @@ function init() {
 }
 init(); 
 
-
-
 /**model anotations:
  * fabric_mat,
  * metal_mat,
@@ -59,18 +51,17 @@ init();
  * wood_mat
  */
 
-//#008000 green
-
 function setupAnnotationToggle(annotation, camera) {
 
   //hide on start scene
   setAnnotationVisibility(annotation, false);
 
   document.querySelector('.configurator-btn').addEventListener('click', () => {
+      reverseCameraAnimation(camera);
       setAnnotationVisibility(annotation, false);
 
       annotationInteraction(camera, annotation, () => {
-          console.log("annotation clicked");
+          console.log("Annotation is disabled and wont show anything");
       }, false); 
   });
 
@@ -80,10 +71,8 @@ function setupAnnotationToggle(annotation, camera) {
 
       annotationInteraction(camera, annotation, () => {
           console.log("annotation clicked");
+          animateCamera(camera, new THREE.Vector3(5, 2, 0));
       }, true); 
-
-      
-  
   });
 }
 
@@ -92,89 +81,6 @@ function setAnnotationVisibility(annotation, visible) {
 
 } 
 
-// document.getElementById('button1').addEventListener('click', (event) => {
-//     MATERIAL_NAME = event.target.getAttribute('data-material');
-//     console.log("selected material: " + MATERIAL_NAME)
-// });
-// document.getElementById('button2').addEventListener('click', (event) => {   
-//     MATERIAL_NAME = event.target.getAttribute('data-material');
-//     console.log("selected material: " + MATERIAL_NAME)
-// });
-// document.getElementById('button3').addEventListener('click', (event) => {  
-//     MATERIAL_NAME = event.target.getAttribute('data-material');
-//     console.log("selected material: " + MATERIAL_NAME)
-// });
-// document.getElementById('button4').addEventListener('click', (event) => { 
-//     MATERIAL_NAME = event.target.getAttribute('data-material');
-//     console.log("selected material: " + MATERIAL_NAME)
-// });
-
-
-//change color 
-// document.getElementById('changeColorButton').addEventListener('click', (event) => {
-//     console.log("color change")
-//     COLOR_HEX = event.target.getAttribute('data-color');
-//     changeModelColor(MATERIAL_NAME, COLOR_HEX);
-// });
-
-
-
-
-// var options = {
-//     distID: "latest",
-//     solution3DName: "suitcase-color",
-//     projectName: "resources-for-videos-and-marketing-purposes",
-//     solution3DID: "62766",
-//     containerID: "container3d",
-//     enableTouch: true,
-  
-  
-//     onPointerClick: function (objectsClick) {
-//       if (objectsClick.length > 0) {
-//         if (objectsClick[0].type == "annotation") {
-//           switch (objectsClick[0].shortName) {
-//             case "Open":
-//               openSuitcase();
-//               break;
-//             case "Close":
-//               closeSuitcase();
-//             case "Wheel spinner on":
-//               legspinnerOn();
-//               break;
-//             case "Wheel spinner off":
-//               legspinnerOff();
-//               break;
-//             case "Extend handle":
-//               extendHandle();
-//               break;
-//             case "Retract handle":
-//               retractHandle();
-//               break;
-//             default:
-//               break;
-//           }
-//         }
-//       }
-//     },
-//   };
-  
-//   let configuration = {
-//     annotations: {
-//       hide: ["Open", "Extend handle", "Wheel spinner on"],
-//     },
-//     camera: $(window).width() < 880 ? "Camera Mobile" : "Camera Desktop",
-//   };
-  
-//   Unlimited3D.init(options, configuration);
-  
-  
-//   function activateCameraBasedOnWidth() {
-//     if ($(window).width() < 880) {
-//       Unlimited3D.activateCamera({ name: "Camera Mobile" });
-//     } else {
-//       Unlimited3D.activateCamera({ name: "Camera Desktop" });
-//     }
-//   }
   
   $(document).ready(function () {
     // Call Camera function on page load

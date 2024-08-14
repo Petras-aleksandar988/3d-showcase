@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader'
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
+import { updateCameraAnimation } from './cameraAnimation.js';
 
 
 const BACKGROUND_COLOR = 0xffffff;
@@ -64,6 +65,8 @@ export function animate(scene, camera, renderer, mixers) {
         mixer.update(delta);
       });
     }
+
+    updateCameraAnimation();
     renderer.render(scene, camera);
   }
 

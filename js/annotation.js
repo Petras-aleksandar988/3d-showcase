@@ -47,7 +47,6 @@ export function annotationInteraction(camera, sprite, onClick, enabled) {
             onClick();
         }
     }
-
  
     if (enabled) {
         if (!activeAnnotationListener) {
