@@ -310,7 +310,7 @@ function setAnnotationVisibility(annotation, visible) {
   }
    
   // next and previous btn order
-  const inputs = ["#body", "#fabric", "#legs", "#laces"];
+  const inputs = ["#body","#laces", "#fabric", "#legs", ];
   let currentIndex = 0;
   
   function setCurrentIndex(index) {
