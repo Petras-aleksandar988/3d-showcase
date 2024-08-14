@@ -13,8 +13,14 @@ function init() {
     const canvas = document.getElementById('canvas');
     const {scene, camera, renderer} = initScene(canvas);
 
+    const loadingOverlay = document.getElementById('loading-overlay');
+    loadingOverlay.style.display = 'flex';
+
     //Adding model to scene
-    loadModel(scene, MODEL_PATH);
+    loadModel(scene, MODEL_PATH).then(() => {
+      // Hide the loading overlay after the model is loaded
+      loadingOverlay.style.display = 'none';
+  });
 
 
     // Build annotations
