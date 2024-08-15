@@ -8,11 +8,12 @@ import { animateCamera, reverseCameraAnimation } from './cameraAnimation.js';
 const MODEL_PATH = '/models/ovini_chair.glb';
 let MATERIAL_NAME = '';
 let COLOR_HEX = '';
-
+let CAMERA = null;
 
 function init() {
     const canvas = document.getElementById('canvas');
     const {scene, camera, renderer} = initScene(canvas);
+    CAMERA = camera;
 
     const loadingOverlay = document.getElementById('loading-overlay');
     loadingOverlay.style.display = 'flex';
@@ -24,9 +25,13 @@ function init() {
   });
 
     // Build annotations
-    const annotations1 = createAnnotation(scene, new THREE.Vector3(0, 0.1, 0.5), '/textures/toll-free.png');
+    const annotations1 = createAnnotation(scene, new THREE.Vector3(0, 0.5, -0.5), '/textures/toll-free.png');
+    
 
     setupAnnotationToggle(annotations1, camera);
+    
+
+
 
     function resize() {
         const width = window.innerWidth;
@@ -52,11 +57,12 @@ init();
  */
 
 function setupAnnotationToggle(annotation, camera) {
-
+  
   //hide on start scene
   setAnnotationVisibility(annotation, false);
 
   document.querySelector('.configurator-btn').addEventListener('click', () => {
+
       reverseCameraAnimation(camera);
       setAnnotationVisibility(annotation, false);
 
@@ -71,7 +77,7 @@ function setupAnnotationToggle(annotation, camera) {
 
       annotationInteraction(camera, annotation, () => {
           console.log("annotation clicked");
-          animateCamera(camera, new THREE.Vector3(5, 2, 0));
+          animateCamera(camera, new THREE.Vector3(0.5, 0.5, 0));
       }, true); 
   });
 }
