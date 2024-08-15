@@ -72,16 +72,20 @@ document.querySelector('.animations-btn').addEventListener('click', () => {
 
   //annotation are set to active
   annotationInteraction(CAMERA, annotations1, () => {
+      animateCamera(CAMERA, new THREE.Vector3(0.4, 1.2, 0));
+
       console.log("Annotation 1 is active");
   }, true);
 
   annotationInteraction(CAMERA, annotations2, () => {
       console.log("Annotation 2 is active");
+      animateCamera(CAMERA, new THREE.Vector3(1, -0.2, 0));
   }, true);
 });
 
 
 document.querySelector('.configurator-btn').addEventListener('click', () => {
+  reverseCameraAnimation(CAMERA)
   setAnnotationVisibility(annotations1, false);
   setAnnotationVisibility(annotations2, false);
   //annotation deactive

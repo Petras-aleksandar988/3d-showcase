@@ -5,7 +5,7 @@ let myTWEEN;
 let originalStartPosition;  
 let originalTargetPosition;
 
-export function animateCamera(camera, targetPosition, duration = 2000, easing = TWEEN.Easing.Quadratic.InOut) {
+export function animateCamera(camera, targetPosition, duration = 2000, easing = TWEEN.Easing.Quadratic.InOut, lookAt = new THREE.Vector3(0, 0.35, 0)) {
     const startPosition = camera.position.clone();
     const target = new THREE.Vector3().copy(targetPosition);
 
@@ -17,20 +17,14 @@ export function animateCamera(camera, targetPosition, duration = 2000, easing = 
         .easing(easing)
         .onUpdate(() => {
             camera.position.copy(startPosition);
-            camera.lookAt(0, 0.35, 0); // Look at a specific point
+            camera.lookAt(lookAt); // Look at a specific point
 
         })
         .start();
-
-        myTWEEN.startPosition = startPosition;
-        myTWEEN.targetPosition = targetPosition;
-        console.log(myTWEEN.startPosition);
-        console.log(myTWEEN.targetPosition);
 }
 
 export function reverseCameraAnimation(camera, duration = 2000, easing = TWEEN.Easing.Quadratic.InOut) {
-    console.log(originalStartPosition);
-    console.log(originalTargetPosition);
+
 
     if (myTWEEN) {
         myTWEEN = new TWEEN.Tween(originalTargetPosition.clone())  // Start from the original target position
