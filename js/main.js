@@ -50,14 +50,17 @@ init();
  * laces_mat,
  * wood_mat
  */
-
+let cameraState = 'reversed'
 function setupAnnotationToggle(annotation, camera) {
 
   //hide on start scene
   setAnnotationVisibility(annotation, false);
 
   document.querySelector('.configurator-btn').addEventListener('click', () => {
+    if (cameraState === 'animated') {
+
       reverseCameraAnimation(camera);
+    }
       setAnnotationVisibility(annotation, false);
 
       annotationInteraction(camera, annotation, () => {
@@ -66,12 +69,22 @@ function setupAnnotationToggle(annotation, camera) {
   });
 
   document.querySelector('.animations-btn').addEventListener('click', () => {
-
+    camera.isAnimated = false
       setAnnotationVisibility(annotation, true);
 
       annotationInteraction(camera, annotation, () => {
           console.log("annotation clicked");
-          animateCamera(camera, new THREE.Vector3(5, 2, 0));
+          // Toggle camera animation
+          if (camera.isAnimated) {
+            reverseCameraAnimation(camera);
+            cameraState = 'reversed'
+        } else {
+            animateCamera(camera, new THREE.Vector3(5, 2, 0));
+            cameraState ='animated'
+        }
+        // Toggle the state of isAnimated
+        camera.isAnimated = !camera.isAnimated;
+
       }, true); 
   });
 }
