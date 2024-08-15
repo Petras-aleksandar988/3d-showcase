@@ -29,13 +29,11 @@ export function createAnnotation(scene, position, textureUrl, width = 0.2, heigh
 }
 
 
-let activeAnnotationListener = null;
-
 export function annotationInteraction(camera, sprite, onClick, enabled) {
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
-    // Function to handle mouse clicks
+    // Define the event listener function
     function onMouseClick(event) {
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -47,16 +45,17 @@ export function annotationInteraction(camera, sprite, onClick, enabled) {
             onClick();
         }
     }
- 
+
+    // Store the event listener on the sprite object so we can remove it later
     if (enabled) {
-        if (!activeAnnotationListener) {
-            window.addEventListener('click', onMouseClick, false);
-            activeAnnotationListener = onMouseClick;
+        if (!sprite.onMouseClick) {
+            sprite.onMouseClick = onMouseClick;
+            window.addEventListener('click', sprite.onMouseClick, false);
         }
     } else {
-        if (activeAnnotationListener) {
-            window.removeEventListener('click', activeAnnotationListener, false);
-            activeAnnotationListener = null;
+        if (sprite.onMouseClick) {
+            window.removeEventListener('click', sprite.onMouseClick, false);
+            sprite.onMouseClick = null;
         }
     }
 }

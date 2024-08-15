@@ -6,9 +6,10 @@ import { animateCamera, reverseCameraAnimation } from './cameraAnimation.js';
 
 //globals
 const MODEL_PATH = '/models/ovini_chair.glb';
-let MATERIAL_NAME = '';
-let COLOR_HEX = '';
 let CAMERA = null;
+let annotations1, annotations2
+
+
 
 function init() {
     const canvas = document.getElementById('canvas');
@@ -25,13 +26,9 @@ function init() {
   });
 
     // Build annotations
-    const annotations1 = createAnnotation(scene, new THREE.Vector3(0, 0.5, -0.5), '/textures/toll-free.png');
-    
-
-    setupAnnotationToggle(annotations1, camera);
-    
-
-
+    annotations1 = createAnnotation(scene, new THREE.Vector3(0, 0.55, 0.30), '/textures/fabric.png', 0.2, 0.1);
+    annotations2 = createAnnotation(scene, new THREE.Vector3(0, 0.15, -0.3), '/textures/legs.png', 0.2, 0.1);
+    setupAnnotationInteractions();
 
     function resize() {
         const width = window.innerWidth;
@@ -56,37 +53,45 @@ init();
  * wood_mat
  */
 
-function setupAnnotationToggle(annotation, camera) {
-  
-  //hide on start scene
-  setAnnotationVisibility(annotation, false);
 
-  document.querySelector('.configurator-btn').addEventListener('click', () => {
+function setupAnnotationInteractions() {
+ 
+  setAnnotationVisibility(annotations1, false);
+  setAnnotationVisibility(annotations2, false);
 
-      reverseCameraAnimation(camera);
-      setAnnotationVisibility(annotation, false);
-
-      annotationInteraction(camera, annotation, () => {
-          console.log("Annotation is disabled and wont show anything");
-      }, false); 
-  });
-
-  document.querySelector('.animations-btn').addEventListener('click', () => {
-
-      setAnnotationVisibility(annotation, true);
-
-      annotationInteraction(camera, annotation, () => {
-          console.log("annotation clicked");
-          animateCamera(camera, new THREE.Vector3(0.5, 0.5, 0));
-      }, true); 
-  });
+  //annotations are not active on start
+  annotationInteraction(CAMERA, annotations1, null, false);
+  annotationInteraction(CAMERA, annotations2, null, false);
 }
+
+
+
+document.querySelector('.animations-btn').addEventListener('click', () => {
+  setAnnotationVisibility(annotations1, true);
+  setAnnotationVisibility(annotations2, true);
+
+  //annotation are set to active
+  annotationInteraction(CAMERA, annotations1, () => {
+      console.log("Annotation 1 is active");
+  }, true);
+
+  annotationInteraction(CAMERA, annotations2, () => {
+      console.log("Annotation 2 is active");
+  }, true);
+});
+
+
+document.querySelector('.configurator-btn').addEventListener('click', () => {
+  setAnnotationVisibility(annotations1, false);
+  setAnnotationVisibility(annotations2, false);
+  //annotation deactive
+  annotationInteraction(CAMERA, annotations1, null, false);
+  annotationInteraction(CAMERA, annotations2, null, false);
+});
 
 function setAnnotationVisibility(annotation, visible) {
   annotation.visible = visible;
-
-} 
-
+}
   
   $(document).ready(function () {
     // Call Camera function on page load
@@ -464,7 +469,7 @@ function setAnnotationVisibility(annotation, visible) {
               if (option.dataset.color === selectedBodyColor) {
                   option.classList.add('selected'); 
                   
-                  changeModelColor('metal_mat',selectedBodyColor);
+                  changeModelColor('metal_mat',selectedBodyColor,true);
 
               } else {
                   option.classList.remove('selected'); 

@@ -33,8 +33,9 @@ export function loadModel(scene, modelPath) {
  * Changes the color of the loaded model.
  * @param {THREE.Color | string} color - The color to apply to the material.
  * @param {THREE.Color | string} materialName - The material to apply the color.
+ * @param {THREE.Color | boolean} removeMap - Remove map with true.
  */
-export function changeModelColor(materialName, color) {
+export function changeModelColor(materialName, color, removeMap = false) {
     if (MODEL_LOADED) {
 
         let materialFound = false;
@@ -42,8 +43,12 @@ export function changeModelColor(materialName, color) {
         MODEL_LOADED.traverse((child) => {
             if (child.isMesh && child.material) {
                 if(child.material.name === materialName){
-
-                    // child.material.map = null; // Remove texture map
+                    if(removeMap){
+                        child.material.map = null; // Remove texture map
+                        child.material.needsUpdate = true;
+                    }
+                    // child.material.roughness = 0;
+                    // child.material.metalness = 0;
                     child.material.color.set(color);
                     materialFound = true;
                 }
