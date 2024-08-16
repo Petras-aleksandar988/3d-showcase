@@ -15,6 +15,8 @@ function init() {
     const canvas = document.getElementById('canvas');
     const {scene, camera, renderer} = initScene(canvas);
     CAMERA = camera;
+    console.log(CAMERA);
+    
 
     const loadingOverlay = document.getElementById('loading-overlay');
     loadingOverlay.style.display = 'flex';
@@ -29,6 +31,8 @@ function init() {
     annotations1 = createAnnotation(scene, new THREE.Vector3(0, 0.55, 0.30), '/textures/fabric.png', 0.2, 0.1);
     annotations2 = createAnnotation(scene, new THREE.Vector3(0, 0.15, -0.3), '/textures/legs.png', 0.2, 0.1);
     setupAnnotationInteractions();
+
+    // animateCamera(CAMERA, new THREE.Vector3(2.6, 0.35, 0));
 
     function resize() {
         const width = window.innerWidth;
@@ -101,7 +105,7 @@ function setAnnotationVisibility(annotation, visible) {
     // Call Camera function on page load
     // activateCameraBasedOnWidth();
     $(window).resize(function () {
-    //   activateCameraBasedOnWidth();
+      activateModifierBasedOnWidth()
       applyMarginBasedOnChange()
       applyMarginBasedOnChangeMobile();
     });
@@ -407,7 +411,7 @@ function setAnnotationVisibility(annotation, visible) {
       $(".upper-btns").css("display", "flex");
       $(".lower-btns").css("display", "flex");
       $("#canvas").css("height", "100vh");
-
+      activateModifierBasedOnWidth()
   }
   
   $(".close-popup").click(function () {
@@ -447,22 +451,59 @@ function setAnnotationVisibility(annotation, visible) {
       });
   }
   
-  function activateModifierBasedOnWidth(mobileModifier, desktopModifier) {
-  if (window.matchMedia('(max-width: 880px)').matches) {
-    //   Unlimited3D.activateModifier({ modifier: mobileModifier });
+  function activateModifierBasedOnWidth() {
+  if (window.matchMedia('(max-width: 768px)').matches) {
+    animateCamera(CAMERA, new THREE.Vector3(2.6, 0.35, 0));
+
   } else {
-    //   Unlimited3D.activateModifier({ modifier: desktopModifier });
+    animateCamera(CAMERA, new THREE.Vector3(2, 0.35, 0));
   }
+
   }
+  function activateAnimationBodyPart() {
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      animateCamera(CAMERA, new THREE.Vector3(2.4, 0.35, 0));
+  
+    } else {
+      animateCamera(CAMERA, new THREE.Vector3(1.8, 0.35, 0));
+    }
+  
+    }
+  function activateAnimationFabricPart() {
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      animateCamera(CAMERA, new THREE.Vector3(2, 1.4, 0));
+  
+    } else {
+      animateCamera(CAMERA, new THREE.Vector3(1, 1.4, 0));
+    }
+  
+    }
+  function activateAnimationLacesPart() {
+    if (window.matchMedia('(max-width: 768px)').matches) {
+     animateCamera(CAMERA, new THREE.Vector3(0.4, 0.9, 0.5));
+    } else {
+      animateCamera(CAMERA, new THREE.Vector3(0.2, 0.7, 0.5));
+    }
+  
+    }
+  function activateAnimationLegsPart() {
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      animateCamera(CAMERA, new THREE.Vector3(1.9, -0.3, 0.2));
+    } else {
+       animateCamera(CAMERA, new THREE.Vector3(1.2, -0.3, 0.2));
+
+    }
+  
+    }
+  
+
   
       function bodyClicked() {
   
    $('.title-x .title').text('BODY COLOR')
-  
-//    activateModifierBasedOnWidth("camera_body_mobile", "camera_body");
+   activateAnimationBodyPart()
   
   $('.upper-btns').css('display', 'none');
-  
   clearColorOptionEventListeners()
       const colorOptions = document.querySelectorAll('.color-option');
       colorOptions.forEach(option => {
@@ -591,6 +632,9 @@ function setAnnotationVisibility(annotation, visible) {
   
   function fabricClicked() {
   $('.title-x .title').text('fabric');
+  activateAnimationFabricPart()
+console.log(CAMERA);
+
 //   activateModifierBasedOnWidth("camera_fabric_mobile", "camera_fabric");
   clearColorOptionEventListeners();
   updateColorOptions(selectedBodyColor);
@@ -599,7 +643,7 @@ function setAnnotationVisibility(annotation, visible) {
   
   function lacesClicked() {
   $('.title-x .title').text('laces');
-//   activateModifierBasedOnWidth("camera_handle_mobile", "camera_handle");
+  activateAnimationLacesPart()
   clearColorOptionEventListeners();
   updateColorOptions(selectedBodyColor);
   setupColorOptions('laces', selectedHandleColor, '#DFDFE1', 'laces_mat');
@@ -607,7 +651,7 @@ function setAnnotationVisibility(annotation, visible) {
   
   function legsClicked() {
   $('.title-x .title').text('legs');
-//   activateModifierBasedOnWidth("wheel_mobile", "wheel_desktop");
+  activateAnimationLegsPart()
   clearColorOptionEventListeners();
   updateColorOptions(selectedBodyColor);
   setupColorOptions('legs', selectedlegsColor, '#DFDFE1', 'wood_mat');

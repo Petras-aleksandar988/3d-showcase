@@ -8,7 +8,13 @@ const BACKGROUND_COLOR = 0xffffff;
 const AMBIENT_LIGHT_COLOR = 0xffffff;
 const AMBIENT_LIGHT_INTENSITY = 0.1;
 const Y_AXIS = 0.35
-const CAMERA_POSITION = new THREE.Vector3(2,Y_AXIS,0);
+let CAMERA_POSITION
+if ($(window).width() < 768) {
+ CAMERA_POSITION = new THREE.Vector3(2.6,Y_AXIS,0);
+
+}else{
+  CAMERA_POSITION = new THREE.Vector3(2,Y_AXIS,0);
+}
 const ORBIT_TARGET = new THREE.Vector3(0, Y_AXIS, 0);
 const HDRI_PATH = '/hdri/studio005small.hdr';
 
