@@ -3,19 +3,19 @@ import { initScene, animate } from './scene.js';
 import { loadModel, changeModelColor } from './modelLoader.js';
 import { annotationInteraction, createAnnotation } from './annotation.js';
 import { animateCamera, reverseCameraAnimation } from './cameraAnimation.js';
+import {Annotation} from './annotationCreator.js';
 
 //globals
 const MODEL_PATH = '/models/ovini_chair.glb';
-let CAMERA = null;
-let annotations1, annotations2
-
+let CAMERA;
+let annotationFabric, annotationLegs;
 
 
 function init() {
     const canvas = document.getElementById('canvas');
     const {scene, camera, renderer} = initScene(canvas);
     CAMERA = camera;
-    console.log(CAMERA);
+
     
 
     const loadingOverlay = document.getElementById('loading-overlay');
@@ -27,12 +27,11 @@ function init() {
       loadingOverlay.style.display = 'none';
   });
 
-    // Build annotations
-    annotations1 = createAnnotation(scene, new THREE.Vector3(0, 0.55, 0.30), '/textures/fabric.png', 0.2, 0.1);
-    annotations2 = createAnnotation(scene, new THREE.Vector3(0, 0.15, -0.3), '/textures/legs.png', 0.2, 0.1);
-    setupAnnotationInteractions();
+    annotationFabric = new Annotation(scene, new THREE.Vector3(0, 0.55, 0.30), '/textures/fabric.png', 0.2, 0.1);
+    annotationFabric.setVisibility(false); // Initially hidden
 
-    // animateCamera(CAMERA, new THREE.Vector3(2.6, 0.35, 0));
+    annotationLegs = new Annotation(scene, new THREE.Vector3(0, 0.15, -0.3), '/textures/legs.png', 0.2, 0.1);
+    annotationLegs.setVisibility(false);
 
     function resize() {
         const width = window.innerWidth;
@@ -58,49 +57,37 @@ init();
  */
 
 
-function setupAnnotationInteractions() {
- 
-  setAnnotationVisibility(annotations1, false);
-  setAnnotationVisibility(annotations2, false);
-
-  //annotations are not active on start
-  annotationInteraction(CAMERA, annotations1, null, false);
-  annotationInteraction(CAMERA, annotations2, null, false);
-}
-
-
 
 document.querySelector('.animations-btn').addEventListener('click', () => {
-  setAnnotationVisibility(annotations1, true);
-  setAnnotationVisibility(annotations2, true);
+  annotationFabric.setVisibility(true);
+  annotationFabric.setInteraction(CAMERA, () => {
+    animateCamera(CAMERA, new THREE.Vector3(0.4, 1.2, 0));
+    //after click on annotation hide the annotation
+    annotationFabric.setVisibility(false);
+    annotationLegs.setVisibility(true);
+  });
 
-  //annotation are set to active
-  annotationInteraction(CAMERA, annotations1, () => {
-      animateCamera(CAMERA, new THREE.Vector3(0.4, 1.2, 0));
-
-      console.log("Annotation 1 is active");
-  }, true);
-
-  annotationInteraction(CAMERA, annotations2, () => {
-      console.log("Annotation 2 is active");
-      animateCamera(CAMERA, new THREE.Vector3(1, -0.2, 0));
-  }, true);
+  annotationLegs.setVisibility(true);
+  annotationLegs.setInteraction(CAMERA, ()=>{
+    animateCamera(CAMERA, new THREE.Vector3(1, -0.2, 0));
+    annotationFabric.setVisibility(true);
+    annotationLegs.setVisibility(false);
+  });
+   
 });
 
 
 document.querySelector('.configurator-btn').addEventListener('click', () => {
-  reverseCameraAnimation(CAMERA)
-  setAnnotationVisibility(annotations1, false);
-  setAnnotationVisibility(annotations2, false);
-  //annotation deactive
-  annotationInteraction(CAMERA, annotations1, null, false);
-  annotationInteraction(CAMERA, annotations2, null, false);
+  //set camera on start position
+  animateCamera(CAMERA, new THREE.Vector3(2,0.35, 0));
+
+  annotationFabric.setVisibility(false);
+  annotationLegs.setVisibility(false);
 });
 
-function setAnnotationVisibility(annotation, visible) {
-  annotation.visible = visible;
-}
-  
+
+
+
   $(document).ready(function () {
     // Call Camera function on page load
     // activateCameraBasedOnWidth();
