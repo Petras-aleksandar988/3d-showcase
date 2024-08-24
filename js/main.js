@@ -6,7 +6,7 @@ import { animateCamera, reverseCameraAnimation } from './cameraAnimation.js';
 import {Annotation} from './annotationCreator.js';
 
 //globals
-const MODEL_PATH = '/models/ovini_chair.glb';
+const MODEL_PATH = '/models/ovini_chair_optimized.glb';
 let CAMERA;
 let annotationFabric, annotationLegs;
 
