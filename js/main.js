@@ -9,7 +9,14 @@ import {Annotation} from './annotationCreator.js';
 const MODEL_PATH = '/models/ovini_chair_optimized.glb';
 let CAMERA;
 let annotationFabric, annotationLegs,closelegs, closeFabric;
+function  fabricAnimationOnWidth() {
+  if (window.matchMedia('(max-width: 768px)').matches) {
+    closeFabric = new Annotation(scene, new THREE.Vector3(0, 0.70, 0), '/textures/fabric.png', 0.2, 0.1);
+  } else {
+    closeFabric = new Annotation(scene, new THREE.Vector3(0, 0.55, 0.30), '/textures/fabric.png', 0.2, 0.1);
 
+  }
+}
 
 function init() {
     const canvas = document.getElementById('canvas');
@@ -27,16 +34,26 @@ function init() {
       loadingOverlay.style.display = 'none';
   });
 
-    annotationFabric = new Annotation(scene, new THREE.Vector3(0, 0.55, 0.30), '/textures/fabric.png', 0.2, 0.1);
-    annotationFabric.setVisibility(false); // Initially hidden
+    
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      annotationFabric = new Annotation(scene, new THREE.Vector3(0, 0.70, 0.10), '/textures/fabric.png', 0.2, 0.1);
+      closeFabric = new Annotation(scene, new THREE.Vector3(0, 0.70, 0), '/textures/close.png',  0.05, 0.05);
+      closelegs = new Annotation(scene, new THREE.Vector3(0.4, 0, -0.06), '/textures/close.png', 0.05, 0.05);
+      annotationLegs = new Annotation(scene, new THREE.Vector3(0, -0.08, -0.1), '/textures/legs.png', 0.2, 0.1);
+    } else {
+      annotationFabric = new Annotation(scene, new THREE.Vector3(0, 0.55, 0.40), '/textures/fabric.png', 0.2, 0.1);
+      closeFabric = new Annotation(scene, new THREE.Vector3(0, 0.40, 0.25), '/textures/close.png', 0.05, 0.05);
+    closelegs = new Annotation(scene, new THREE.Vector3(0.4, -0.05, -0.12), '/textures/close.png', 0.05, 0.05);
+    annotationLegs = new Annotation(scene, new THREE.Vector3(0, 0.15, -0.3), '/textures/legs.png', 0.2, 0.1);
 
-    closeFabric = new Annotation(scene, new THREE.Vector3(0, 0.55, 0.3), '/textures/close.png',  0.05, 0.05);
+
+      
+    }
+    annotationFabric.setVisibility(false); // Initially hidden
     closeFabric.setVisibility(false); 
 
-    annotationLegs = new Annotation(scene, new THREE.Vector3(0, 0.15, -0.3), '/textures/legs.png', 0.2, 0.1);
     annotationLegs.setVisibility(false);
 
-    closelegs = new Annotation(scene, new THREE.Vector3(0.4, 0.15, -0.2), '/textures/close.png', 0.05, 0.05);
     closelegs.setVisibility(false);
 
     function resize() {
@@ -463,14 +480,7 @@ document.querySelector('.configurator-btn').addEventListener('click', () => {
       });
   }
 
-  function  fabricAnimationOnWidth() {
-    if (window.matchMedia('(max-width: 768px)').matches) {
-      annotationFabric = new Annotation(scene, new THREE.Vector3(0, 0.70, 0), '/textures/fabric.png', 0.2, 0.1);
-    } else {
-      annotationFabric = new Annotation(scene, new THREE.Vector3(0, 0.55, 0.30), '/textures/fabric.png', 0.2, 0.1);
-  
-    }
-  }
+
   
   function activateModifierBasedOnWidth() {
   if (window.matchMedia('(max-width: 768px)').matches) {
