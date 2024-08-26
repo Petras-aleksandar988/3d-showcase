@@ -180,9 +180,9 @@ function animateFabric() {
 }
 function animatelegs() {
   if (window.matchMedia("(max-width: 768px)").matches) {
-    animateCamera(CAMERA, new THREE.Vector3(1.9, -0.2, 0));
+    animateCamera(CAMERA, new THREE.Vector3(1.2, -0.8, 0.9));
   } else {
-    animateCamera(CAMERA, new THREE.Vector3(1, -0.2, 0));
+    animateCamera(CAMERA, new THREE.Vector3(1, -0.2,0.3));
   }
 }
 
@@ -350,9 +350,9 @@ function activateAnimationFabricPart() {
 }
 function activateAnimationLacesPart() {
   if (window.matchMedia("(max-width: 768px)").matches) {
-    animateCamera(CAMERA, new THREE.Vector3(0.4, 0.9, 0.5));
+    animateCamera(CAMERA, new THREE.Vector3(0.7, 1, -0.9));
   } else {
-    animateCamera(CAMERA, new THREE.Vector3(0.2, 0.7, 0.5));
+    animateCamera(CAMERA, new THREE.Vector3(0.4, 0.9, 0.5));
   }
 }
 function activateAnimationLegsPart() {
