@@ -130,9 +130,9 @@ $(document).ready(function () {
 
 let selectedBodyColor = "#d4c8a3";
 let previousBodyColor = "";
-let selectedCornerColor = "#d4c8a3";
-let selectedHandleColor = "#d4c8a3";
-let selectedlegsColor = "#d4c8a3";
+let selectedFabricColor = "#d4c8a3";
+let selectedLacesColor = "#d4c8a3";
+let selectedLegsColor = "#d4c8a3";
 
 function applyMarginBasedOnChangeMobile() {
   const isMobile = window.matchMedia("(max-width: 880px)").matches;
@@ -379,9 +379,9 @@ function bodyClicked() {
         option.classList.add("selected");
 
         changeModelColor("metal_mat", selectedBodyColor);
-        changeModelColor("fabric_mat", selectedBodyColor);
-        changeModelColor("laces_mat", selectedBodyColor);
-        changeModelColor("wood_mat", selectedBodyColor);
+        changeModelColor("fabric_mat", selectedFabricColor);
+        changeModelColor("laces_mat", selectedLacesColor);
+        changeModelColor("wood_mat", selectedLegsColor);
       } else {
         option.classList.remove("selected");
       }
@@ -397,20 +397,19 @@ function bodyClicked() {
       const newSelectedColor = element.dataset.color;
 
       if (newSelectedColor !== selectedBodyColor) {
-        console.log("sdsdsds");
 
         // Body color has changed
         selectedBodyColor = newSelectedColor; // Update the new selected color
         document.querySelector(".color-chosen").textContent =
           element.dataset.name;
+          selectedFabricColor = "#d4c8a3";
+          selectedLegsColor = "#d4c8a3";
+          selectedLacesColor = "#d4c8a3";
         changeModelColor("metal_mat", selectedBodyColor);
-        changeModelColor("fabric_mat", "#d4c8a3");
-        changeModelColor("laces_mat", "#d4c8a3");
-        changeModelColor("wood_mat", "#d4c8a3");
+        changeModelColor("fabric_mat",  selectedFabricColor);
+        changeModelColor("laces_mat",  selectedLacesColor);
+        changeModelColor("wood_mat", selectedLegsColor);
 
-        selectedCornerColor = "#d4c8a3";
-        selectedHandleColor = "#d4c8a3";
-        selectedlegsColor = "#d4c8a3";
       }
     });
   });
@@ -452,13 +451,13 @@ function setupColorOptions(partType, selectedColor, defaultColor, partObjects) {
       // Set the correct global variable based on the part type
       switch (partType) {
         case "fabric":
-          selectedCornerColor = newColor;
+          selectedFabricColor = newColor;
           break;
         case "laces":
-          selectedHandleColor = newColor;
+          selectedLacesColor = newColor;
           break;
         case "legs":
-          selectedlegsColor = newColor;
+          selectedLegsColor = newColor;
           break;
         default:
           break;
@@ -477,7 +476,7 @@ function fabricClicked() {
 
   clearColorOptionEventListeners();
   updateColorOptions(selectedBodyColor);
-  setupColorOptions("fabric", selectedCornerColor, "#d4c8a3", "fabric_mat");
+  setupColorOptions("fabric", selectedFabricColor, "#d4c8a3", "fabric_mat");
 }
 
 function lacesClicked() {
@@ -485,7 +484,7 @@ function lacesClicked() {
   activateAnimationLacesPart();
   clearColorOptionEventListeners();
   updateColorOptions(selectedBodyColor);
-  setupColorOptions("laces", selectedHandleColor, "#d4c8a3", "laces_mat");
+  setupColorOptions("laces", selectedLacesColor, "#d4c8a3", "laces_mat");
 }
 
 function legsClicked() {
@@ -493,7 +492,7 @@ function legsClicked() {
   activateAnimationLegsPart();
   clearColorOptionEventListeners();
   updateColorOptions(selectedBodyColor);
-  setupColorOptions("legs", selectedlegsColor, "#d4c8a3", "wood_mat");
+  setupColorOptions("legs", selectedLegsColor, "#d4c8a3", "wood_mat");
 }
 
 function handleImageDisplay(inputSelector, shouldDisplay) {
