@@ -8,7 +8,7 @@ import {Annotation} from './annotationCreator.js';
 //globals
 const MODEL_PATH = '/models/ovini_chair_optimized.glb';
 let CAMERA;
-let annotationFabric, annotationLegs;
+let annotationFabric, annotationLegs,closelegs, closeFabric;
 
 
 function init() {
@@ -30,8 +30,14 @@ function init() {
     annotationFabric = new Annotation(scene, new THREE.Vector3(0, 0.55, 0.30), '/textures/fabric.png', 0.2, 0.1);
     annotationFabric.setVisibility(false); // Initially hidden
 
+    closeFabric = new Annotation(scene, new THREE.Vector3(0, 0.55, 0.3), '/textures/close.png',  0.05, 0.05);
+    closeFabric.setVisibility(false); 
+
     annotationLegs = new Annotation(scene, new THREE.Vector3(0, 0.15, -0.3), '/textures/legs.png', 0.2, 0.1);
     annotationLegs.setVisibility(false);
+
+    closelegs = new Annotation(scene, new THREE.Vector3(0.4, 0.15, -0.2), '/textures/close.png', 0.05, 0.05);
+    closelegs.setVisibility(false);
 
     function resize() {
         const width = window.innerWidth;
@@ -64,18 +70,35 @@ document.querySelector('.animations-btn').addEventListener('click', () => {
     animateCamera(CAMERA, new THREE.Vector3(0.4, 1.2, 0));
     //after click on annotation hide the annotation
     annotationFabric.setVisibility(false);
-    annotationLegs.setVisibility(true);
+    annotationLegs.setVisibility(false);
+    closelegs.setVisibility(false);
+    closeFabric.setVisibility(true);
   });
 
   annotationLegs.setVisibility(true);
   annotationLegs.setInteraction(CAMERA, ()=>{
     animateCamera(CAMERA, new THREE.Vector3(1, -0.2, 0));
-    annotationFabric.setVisibility(true);
+    annotationFabric.setVisibility(false);
     annotationLegs.setVisibility(false);
+    closeFabric.setVisibility(false);
+    closelegs.setVisibility(true);
   });
    
 });
-
+closelegs.setInteraction(CAMERA, ()=>{
+  activateModifierBasedOnWidth()
+  annotationFabric.setVisibility(true);
+  annotationLegs.setVisibility(true);
+  closelegs.setVisibility(false);
+  closeFabric.setVisibility(false);
+});
+closeFabric.setInteraction(CAMERA, ()=>{
+  activateModifierBasedOnWidth()
+  annotationFabric.setVisibility(true);
+  annotationLegs.setVisibility(true);
+  closelegs.setVisibility(false);
+  closeFabric.setVisibility(false);
+});
 
 document.querySelector('.configurator-btn').addEventListener('click', () => {
   //set camera on start position
@@ -83,6 +106,8 @@ document.querySelector('.configurator-btn').addEventListener('click', () => {
 
   annotationFabric.setVisibility(false);
   annotationLegs.setVisibility(false);
+  closelegs.setVisibility(false);
+  closeFabric.setVisibility(false);
 });
 
 
@@ -437,13 +462,22 @@ document.querySelector('.configurator-btn').addEventListener('click', () => {
           $option.replaceWith($newOption);
       });
   }
+
+  function  fabricAnimationOnWidth() {
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      annotationFabric = new Annotation(scene, new THREE.Vector3(0, 0.70, 0), '/textures/fabric.png', 0.2, 0.1);
+    } else {
+      annotationFabric = new Annotation(scene, new THREE.Vector3(0, 0.55, 0.30), '/textures/fabric.png', 0.2, 0.1);
+  
+    }
+  }
   
   function activateModifierBasedOnWidth() {
   if (window.matchMedia('(max-width: 768px)').matches) {
     animateCamera(CAMERA, new THREE.Vector3(2.6, 0.35, 0));
-
   } else {
     animateCamera(CAMERA, new THREE.Vector3(2, 0.35, 0));
+
   }
 
   }
