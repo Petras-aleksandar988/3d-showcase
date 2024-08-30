@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { initScene, animate } from "./scene.js";
-import { loadModel, changeModelColor } from "./modelLoader.js";
 import { animateCamera} from "./cameraAnimation.js";
 import { ModelLoader} from "./model.js";
 
@@ -8,11 +7,12 @@ import { ModelLoader} from "./model.js";
 //globals
 const MODEL_PATH = "/models/ovini_chair_optimized.glb";
 let CAMERA;
+let modelOnScene;
 
 
-let ovini_chair 
+let oviniChair 
 //ovini attributes
-let ovini_att = {
+let oviniAtt = {
   pathFabric: "/textures/fabric.png",
   pathLegs: "/textures/legs.png",
   positionFabric: null,
@@ -28,23 +28,25 @@ function init() {
   const loadingOverlay = document.getElementById("loading-overlay");
   loadingOverlay.style.display = "flex";
 
+  // The position of the annotation depends on the display
   if (window.matchMedia("(max-width: 768px)").matches) {
-    ovini_att.positionFabric = new THREE.Vector3(0, 0.7, 0.1);
-    ovini_att.positionLegs = new THREE.Vector3(0, -0.08, -0.1);
+    oviniAtt.positionFabric = new THREE.Vector3(0, 0.7, 0.1);
+    oviniAtt.positionLegs = new THREE.Vector3(0, -0.08, -0.1);
   }else {
-    ovini_att.positionFabric = new THREE.Vector3(0, 0.55, 0.4);
-    ovini_att.positionLegs = new THREE.Vector3(0, 0.15, -0.3);
+    oviniAtt.positionFabric = new THREE.Vector3(0, 0.55, 0.4);
+    oviniAtt.positionLegs = new THREE.Vector3(0, 0.15, -0.3);
   }
 
-  ovini_chair = new ModelLoader(scene, MODEL_PATH, camera);
+  oviniChair = new ModelLoader(scene, MODEL_PATH, camera);
+  modelOnScene = oviniChair;
   loadingOverlay.style.display = "none";
 
-  ovini_chair.addAnnotation('fabric', ovini_att.positionFabric, ovini_att.pathFabric, 0.2, 0.1);
-  ovini_chair.addAnnotation('legs', ovini_att.positionLegs, ovini_att.pathLegs, 0.2, 0.1);
+  oviniChair.addAnnotation('fabric', oviniAtt.positionFabric, oviniAtt.pathFabric, 0.2, 0.1);
+  oviniChair.addAnnotation('legs', oviniAtt.positionLegs, oviniAtt.pathLegs, 0.2, 0.1);
 
  
   //if name is all it will change for all annotations, otherwise only by name
-  ovini_chair.setAnnotationVisibility('all', false);
+  oviniChair.setAnnotationVisibility('all', false);
 
   function resize() {
     const width = window.innerWidth;
@@ -70,8 +72,8 @@ init();
  */
 
 document.querySelector(".animations-btn").addEventListener("click", () => {
-  ovini_chair.setAnnotationVisibility('all', true);
-  ovini_chair.triggerInteraction('fabric', () => {
+  oviniChair.setAnnotationVisibility('all', true);
+  oviniChair.triggerInteraction('fabric', () => {
     console.log("Fabric annotation clicked");
   });
 })
@@ -79,18 +81,18 @@ document.querySelector(".animations-btn").addEventListener("click", () => {
 
 document.querySelector(".animations-btn").addEventListener("click", () => {
   activateModifierBasedOnWidth();
-  ovini_chair.setAnnotationVisibility('all', true);
-  ovini_chair.triggerInteraction('fabric', () => {
+  oviniChair.setAnnotationVisibility('all', true);
+  oviniChair.triggerInteraction('fabric', () => {
     animateFabric();
-    ovini_chair.setAnnotationVisibility('all', false);
+    oviniChair.setAnnotationVisibility('all', false);
 
     $(".close-animation").css("display", "flex");
     $(".close-animation img").attr("src", "/textures/close.png");
   });
   
-  ovini_chair.triggerInteraction('legs', ()=>{
+  oviniChair.triggerInteraction('legs', ()=>{
     animatelegs();
-    ovini_chair.setAnnotationVisibility('all', false);
+    oviniChair.setAnnotationVisibility('all', false);
     $(".close-animation").css("display", "flex");
     $(".close-animation img").attr("src", "/textures/close.png");
   })
@@ -98,7 +100,7 @@ document.querySelector(".animations-btn").addEventListener("click", () => {
 
 $(".close-animation").click(function () {
   activateModifierBasedOnWidth();
-  ovini_chair.setAnnotationVisibility('all', true);
+  oviniChair.setAnnotationVisibility('all', true);
   $(this).css("display", "none");
 });
 
@@ -107,7 +109,7 @@ document.querySelector(".configurator-btn").addEventListener("click", () => {
   //set camera on start position
   animateCamera(CAMERA, new THREE.Vector3(2, 0.35, 0));
 
-  ovini_chair.setAnnotationVisibility('all', false);
+  oviniChair.setAnnotationVisibility('all', false);
 });
 
 $(document).ready(function () {
@@ -368,15 +370,15 @@ function bodyClicked() {
       if (option.dataset.color === selectedBodyColor) {
         option.classList.add("selected");
 
-        changeModelColor("metal_mat", selectedBodyColor);
-        changeModelColor("fabric_mat", selectedFabricColor);
-        changeModelColor("laces_mat", selectedLacesColor);
-        changeModelColor("wood_mat", selectedLegsColor);
+        modelOnScene.changeModelColor("metal_mat", selectedBodyColor);
+        modelOnScene.changeModelColor("fabric_mat", selectedFabricColor);
+        modelOnScene.changeModelColor("laces_mat", selectedLacesColor);
+        modelOnScene.changeModelColor("wood_mat", selectedLegsColor);
       } else {
         option.classList.remove("selected");
       }
     } else {
-      changeModelColor("metal_mat", "#d4c8a3");
+      modelOnScene.changeModelColor("metal_mat", "#d4c8a3");
     }
 
     option.addEventListener("click", function () {
@@ -395,10 +397,10 @@ function bodyClicked() {
           selectedFabricColor = "#d4c8a3";
           selectedLegsColor = "#d4c8a3";
           selectedLacesColor = "#d4c8a3";
-        changeModelColor("metal_mat", selectedBodyColor);
-        changeModelColor("fabric_mat",  selectedFabricColor);
-        changeModelColor("laces_mat",  selectedLacesColor);
-        changeModelColor("wood_mat", selectedLegsColor);
+        modelOnScene.changeModelColor("metal_mat", selectedBodyColor);
+        modelOnScene.changeModelColor("fabric_mat",  selectedFabricColor);
+        modelOnScene.changeModelColor("laces_mat",  selectedLacesColor);
+        modelOnScene.changeModelColor("wood_mat", selectedLegsColor);
 
       }
     });
@@ -428,9 +430,9 @@ function setupColorOptions(partType, selectedColor, defaultColor, partObjects) {
     if (previousBodyColor !== "" && selectedBodyColor !== previousBodyColor) {
       option.classList.remove("selected");
       colorOptions[0].classList.add("selected");
-      changeModelColor(partObjects, defaultColor);
+      modelOnScene.changeModelColor(partObjects, defaultColor);
     } else {
-      changeModelColor(partObjects, selectedColor);
+      modelOnScene.changeModelColor(partObjects, selectedColor);
     }
 
     option.addEventListener("click", function () {
@@ -454,7 +456,7 @@ function setupColorOptions(partType, selectedColor, defaultColor, partObjects) {
       }
 
       document.querySelector(".color-chosen").textContent = this.dataset.name;
-      changeModelColor(partObjects, newColor);
+      modelOnScene.changeModelColor(partObjects, newColor);
     });
   });
 }
