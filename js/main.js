@@ -1,14 +1,24 @@
 import * as THREE from "three";
 import { initScene, animate } from "./scene.js";
 import { loadModel, changeModelColor } from "./modelLoader.js";
-import { annotationInteraction, createAnnotation } from "./annotation.js";
-import { animateCamera, reverseCameraAnimation } from "./cameraAnimation.js";
-import { Annotation } from "./annotationCreator.js";
+import { animateCamera} from "./cameraAnimation.js";
+import { ModelLoader} from "./model.js";
+
 
 //globals
 const MODEL_PATH = "/models/ovini_chair_optimized.glb";
 let CAMERA;
-let annotationFabric, annotationLegs, closelegs, closeFabric;
+
+
+let ovini_chair 
+//ovini attributes
+let ovini_att = {
+  pathFabric: "/textures/fabric.png",
+  pathLegs: "/textures/legs.png",
+  positionFabric: null,
+  positionLegs: null
+};
+
 
 function init() {
   const canvas = document.getElementById("canvas");
@@ -18,45 +28,23 @@ function init() {
   const loadingOverlay = document.getElementById("loading-overlay");
   loadingOverlay.style.display = "flex";
 
-  //Adding model to scene
-  loadModel(scene, MODEL_PATH).then(() => {
-    // Hide the loading overlay after the model is loaded
-    loadingOverlay.style.display = "none";
-  });
-
   if (window.matchMedia("(max-width: 768px)").matches) {
-    annotationFabric = new Annotation(
-      scene,
-      new THREE.Vector3(0, 0.7, 0.1),
-      "/textures/fabric.png",
-      0.2,
-      0.1
-    );
-    annotationLegs = new Annotation(
-      scene,
-      new THREE.Vector3(0, -0.08, -0.1),
-      "/textures/legs.png",
-      0.2,
-      0.1
-    );
-  } else {
-    annotationFabric = new Annotation(
-      scene,
-      new THREE.Vector3(0, 0.55, 0.4),
-      "/textures/fabric.png",
-      0.2,
-      0.1
-    );
-    annotationLegs = new Annotation(
-      scene,
-      new THREE.Vector3(0, 0.15, -0.3),
-      "/textures/legs.png",
-      0.2,
-      0.1
-    );
+    ovini_att.positionFabric = new THREE.Vector3(0, 0.7, 0.1);
+    ovini_att.positionLegs = new THREE.Vector3(0, -0.08, -0.1);
+  }else {
+    ovini_att.positionFabric = new THREE.Vector3(0, 0.55, 0.4);
+    ovini_att.positionLegs = new THREE.Vector3(0, 0.15, -0.3);
   }
-  annotationFabric.setVisibility(false); // Initially hidden
-  annotationLegs.setVisibility(false);
+
+  ovini_chair = new ModelLoader(scene, MODEL_PATH, camera);
+  loadingOverlay.style.display = "none";
+
+  ovini_chair.addAnnotation('fabric', ovini_att.positionFabric, ovini_att.pathFabric, 0.2, 0.1);
+  ovini_chair.addAnnotation('legs', ovini_att.positionLegs, ovini_att.pathLegs, 0.2, 0.1);
+
+ 
+  //if name is all it will change for all annotations, otherwise only by name
+  ovini_chair.setAnnotationVisibility('all', false);
 
   function resize() {
     const width = window.innerWidth;
@@ -82,32 +70,35 @@ init();
  */
 
 document.querySelector(".animations-btn").addEventListener("click", () => {
+  ovini_chair.setAnnotationVisibility('all', true);
+  ovini_chair.triggerInteraction('fabric', () => {
+    console.log("Fabric annotation clicked");
+  });
+})
+
+
+document.querySelector(".animations-btn").addEventListener("click", () => {
   activateModifierBasedOnWidth();
-  annotationFabric.setVisibility(true);
-  annotationFabric.setInteraction(CAMERA, () => {
+  ovini_chair.setAnnotationVisibility('all', true);
+  ovini_chair.triggerInteraction('fabric', () => {
     animateFabric();
-    //after click on annotation hide the annotation
-    annotationFabric.setVisibility(false);
-    annotationLegs.setVisibility(false);
+    ovini_chair.setAnnotationVisibility('all', false);
 
     $(".close-animation").css("display", "flex");
     $(".close-animation img").attr("src", "/textures/close.png");
   });
-
-  annotationLegs.setVisibility(true);
-  annotationLegs.setInteraction(CAMERA, () => {
+  
+  ovini_chair.triggerInteraction('legs', ()=>{
     animatelegs();
-    annotationFabric.setVisibility(false);
-    annotationLegs.setVisibility(false);
+    ovini_chair.setAnnotationVisibility('all', false);
     $(".close-animation").css("display", "flex");
     $(".close-animation img").attr("src", "/textures/close.png");
-  });
+  })
 });
 
 $(".close-animation").click(function () {
   activateModifierBasedOnWidth();
-  annotationFabric.setVisibility(true);
-  annotationLegs.setVisibility(true);
+  ovini_chair.setAnnotationVisibility('all', true);
   $(this).css("display", "none");
 });
 
@@ -116,8 +107,7 @@ document.querySelector(".configurator-btn").addEventListener("click", () => {
   //set camera on start position
   animateCamera(CAMERA, new THREE.Vector3(2, 0.35, 0));
 
-  annotationFabric.setVisibility(false);
-  annotationLegs.setVisibility(false);
+  ovini_chair.setAnnotationVisibility('all', false);
 });
 
 $(document).ready(function () {
