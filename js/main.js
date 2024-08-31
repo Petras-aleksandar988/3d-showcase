@@ -7,6 +7,8 @@ import { ModelLoader} from "./model.js";
 //globals
 const MODEL_PATH = "/models/ovini_chair_optimized.glb";
 let CAMERA;
+
+//placeholder for changeModelColor;
 let modelOnScene;
 
 
