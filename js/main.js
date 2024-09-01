@@ -2,25 +2,19 @@ import * as THREE from "three";
 import { initScene, animate } from "./scene.js";
 import { animateCamera} from "./cameraAnimation.js";
 import { ModelLoader} from "./model.js";
+import assets from './assets.js';
 
 
 //globals
-const MODEL_PATH = "/models/ovini_chair_optimized.glb";
 let CAMERA;
 
 //placeholder for changeModelColor;
 let modelOnScene;
 
-
 let oviniChair 
-//ovini attributes
-let oviniAtt = {
-  pathFabric: "/textures/fabric.png",
-  pathLegs: "/textures/legs.png",
-  positionFabric: null,
-  positionLegs: null
-};
 
+//logic for loading asset from assets.js
+const chairAsset = assets[0];
 
 function init() {
   const canvas = document.getElementById("canvas");
@@ -31,21 +25,21 @@ function init() {
   loadingOverlay.style.display = "flex";
 
   // The position of the annotation depends on the display
-  if (window.matchMedia("(max-width: 768px)").matches) {
-    oviniAtt.positionFabric = new THREE.Vector3(0, 0.7, 0.1);
-    oviniAtt.positionLegs = new THREE.Vector3(0, -0.08, -0.1);
-  }else {
-    oviniAtt.positionFabric = new THREE.Vector3(0, 0.55, 0.4);
-    oviniAtt.positionLegs = new THREE.Vector3(0, 0.15, -0.3);
-  }
+  let fabricPosition, legsPosition;
+    if (window.matchMedia("(max-width: 768px)").matches) {
+        fabricPosition = chairAsset.annotationFabricMobilePos;
+        legsPosition = chairAsset.annotationLegsMobilePos;
+    } else {
+        fabricPosition = chairAsset.annotationFabricPos;
+        legsPosition = chairAsset.annotationLegsPos;
+    }
 
-  oviniChair = new ModelLoader(scene, MODEL_PATH, camera);
-  modelOnScene = oviniChair;
-  loadingOverlay.style.display = "none";
+    oviniChair = new ModelLoader(scene, chairAsset.path, camera);
+    modelOnScene = oviniChair;
+    loadingOverlay.style.display = "none";
 
-  oviniChair.addAnnotation('fabric', oviniAtt.positionFabric, oviniAtt.pathFabric, 0.2, 0.1);
-  oviniChair.addAnnotation('legs', oviniAtt.positionLegs, oviniAtt.pathLegs, 0.2, 0.1);
-
+    oviniChair.addAnnotation('fabric', fabricPosition, chairAsset.pathFabric, 0.2, 0.1);
+    oviniChair.addAnnotation('legs', legsPosition, chairAsset.pathLegs, 0.2, 0.1);
  
   //if name is all it will change for all annotations, otherwise only by name
   oviniChair.setAnnotationVisibility('all', false);
