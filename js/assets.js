@@ -1,9 +1,9 @@
 import * as THREE from "three";
 export default [
     {
-        name: "ovini_chair_optimized",
+        name: "Ovini chair",
         type: "glbModel",
-        path: "/models/ovini_chair_optimized.glb",
+        path: "/models/ovini_chair.glb",
         pathFabric: "/textures/fabric.png",       
         pathLegs: "/textures/legs.png",   
         annotationFabricPos: new THREE.Vector3(0, 0.55, 0.4),
@@ -18,9 +18,9 @@ export default [
         animateLegsMobile:new THREE.Vector3(1.2, -0.8, 0.9)
     },
     {
-        name: "ovini_chair_optimized",
+        name: "Tamarack chair",
         type: "glbModel",
-        path: "/models/Tamarack01.glb",
+        path: "/models/tamarack_chair.glb",
         pathFabric: "/textures/fabric.png",       
         pathLegs: "/textures/legs.png",   
         annotationFabricPos: new THREE.Vector3(0, 0.55, 0.4),
