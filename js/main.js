@@ -8,31 +8,37 @@ import assets from './assets.js';
 //globals
 let CAMERA;
 
+
 //placeholder for changeModelColor;
 let modelOnScene;
 
 let oviniChair 
 
 //logic for loading asset from assets.js
-const chairAsset = assets[0];
+const chairAsset = JSON.parse(localStorage.getItem('selectedChair'));
+
+let fabricPosition, legsPosition;
+
+function annotationiconPosition (){
+  if (window.matchMedia("(max-width: 768px)").matches) {
+    fabricPosition = chairAsset.annotationFabricMobilePos;
+    legsPosition = chairAsset.annotationLegsMobilePos;
+} else {
+    fabricPosition = chairAsset.annotationFabricPos;
+    legsPosition = chairAsset.annotationLegsPos;
+}
+}
 
 function init() {
   const canvas = document.getElementById("canvas");
-  const { scene, camera, renderer } = initScene(canvas);
+  const { scene, camera, renderer } = initScene(canvas, chairAsset);
   CAMERA = camera;
 
   const loadingOverlay = document.getElementById("loading-overlay");
   loadingOverlay.style.display = "flex";
-
+  
   // The position of the annotation depends on the display
-  let fabricPosition, legsPosition;
-    if (window.matchMedia("(max-width: 768px)").matches) {
-        fabricPosition = chairAsset.annotationFabricMobilePos;
-        legsPosition = chairAsset.annotationLegsMobilePos;
-    } else {
-        fabricPosition = chairAsset.annotationFabricPos;
-        legsPosition = chairAsset.annotationLegsPos;
-    }
+  annotationiconPosition ()
 
     oviniChair = new ModelLoader(scene, chairAsset.path, camera);
     modelOnScene = oviniChair;
@@ -59,6 +65,11 @@ function init() {
   resize();
 }
 init();
+
+function resize() {
+}
+
+window.addEventListener("resize", resize);
 
 /**model anotations:
  * fabric_mat,
@@ -103,7 +114,7 @@ $(".close-animation").click(function () {
 document.querySelector(".configurator-btn").addEventListener("click", () => {
   $(".close-animation").css("display", "none");
   //set camera on start position
-  animateCamera(CAMERA, new THREE.Vector3(2, 0.35, 0));
+  activateModifierBasedOnWidth();
 
   oviniChair.setAnnotationVisibility('all', false);
 });
@@ -113,6 +124,7 @@ $(document).ready(function () {
     activateModifierBasedOnWidth();
     applyMarginBasedOnChange();
     applyMarginBasedOnChangeMobile();
+  annotationiconPosition () 
   });
 });
 
@@ -161,16 +173,16 @@ function applyMarginBasedOnChangeMobile() {
 
 function animateFabric() {
   if (window.matchMedia("(max-width: 768px)").matches) {
-    animateCamera(CAMERA, new THREE.Vector3(0.9, 1.5, 0.5));
+    animateCamera(CAMERA, chairAsset.animateFabricMobile);
   } else {
-    animateCamera(CAMERA, new THREE.Vector3(0.6, 1.5, 0.4));
+    animateCamera(CAMERA, chairAsset.animateFabricDesctop);
   }
 }
 function animatelegs() {
   if (window.matchMedia("(max-width: 768px)").matches) {
-    animateCamera(CAMERA, new THREE.Vector3(1.2, -0.8, 0.9));
+    animateCamera(CAMERA, chairAsset.animateLegsMobile);
   } else {
-    animateCamera(CAMERA, new THREE.Vector3(1, -0.2,0.3));
+    animateCamera(CAMERA, chairAsset.animateLegsDesctop);
   }
 }
 
@@ -317,9 +329,10 @@ function clearColorOptionEventListeners() {
 
 function activateModifierBasedOnWidth() {
   if (window.matchMedia("(max-width: 768px)").matches) {
-    animateCamera(CAMERA, new THREE.Vector3(2.6, 0.35, 0));
+
+    animateCamera(CAMERA, chairAsset.cameraPosMobile);
   } else {
-    animateCamera(CAMERA, new THREE.Vector3(2, 0.35, 0));
+    animateCamera(CAMERA, chairAsset.cameraPos);
   }
 }
 function activateAnimationBodyPart() {
@@ -501,4 +514,7 @@ $(".left-btn").on("click", function () {
 
 $(".right-btn").on("click", function () {
   $(".color-options").animate({ scrollLeft: "+=100px" }, "smooth");
+});
+$(".chose-model").on("click", function () {
+  window.location.href = 'index.html';
 });
