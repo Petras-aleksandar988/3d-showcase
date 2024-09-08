@@ -1,8 +1,8 @@
 import * as THREE from "three";
-import { initScene, animate } from "./scene.js";
+import { initScene, animate, passModelToScene} from "./scene.js";
 import { animateCamera} from "./cameraAnimation.js";
 import { ModelLoader} from "./model.js";
-import assets from './assets.js';
+import { ARButton } from './arButton.js';
 
 
 //globals
@@ -12,7 +12,8 @@ let CAMERA;
 //placeholder for changeModelColor;
 let modelOnScene;
 
-let oviniChair 
+let oviniChair; 
+let rendererAR;
 
 //logic for loading asset from assets.js
 const chairAsset = JSON.parse(localStorage.getItem('selectedChair'));
@@ -33,19 +34,22 @@ function init() {
   const canvas = document.getElementById("canvas");
   const { scene, camera, renderer } = initScene(canvas, chairAsset);
   CAMERA = camera;
+  rendererAR = renderer;
 
   const loadingOverlay = document.getElementById("loading-overlay");
   loadingOverlay.style.display = "flex";
   
   // The position of the annotation depends on the display
-  annotationiconPosition ()
+  annotationiconPosition ();
 
-    oviniChair = new ModelLoader(scene, chairAsset.path, camera);
-    modelOnScene = oviniChair;
-    loadingOverlay.style.display = "none";
+  oviniChair = new ModelLoader(scene, chairAsset.path, camera);
+  modelOnScene = oviniChair;
+    
+  loadingOverlay.style.display = "none";
+ 
 
-    oviniChair.addAnnotation('fabric', fabricPosition, chairAsset.pathFabric, 0.2, 0.1);
-    oviniChair.addAnnotation('legs', legsPosition, chairAsset.pathLegs, 0.2, 0.1);
+  oviniChair.addAnnotation('fabric', fabricPosition, chairAsset.pathFabric, 0.2, 0.1);
+  oviniChair.addAnnotation('legs', legsPosition, chairAsset.pathLegs, 0.2, 0.1);
  
   //if name is all it will change for all annotations, otherwise only by name
   oviniChair.setAnnotationVisibility('all', false);
@@ -66,10 +70,21 @@ function init() {
 }
 init();
 
-function resize() {
-}
+const arButton = ARButton.createButton(rendererAR, {
+  requiredFeatures: ["hit-test"]
+});
+rendererAR.xr.enabled = true;
+document.body.appendChild(arButton);
 
-window.addEventListener("resize", resize);
+arButton.addEventListener('click', () => {
+  console.log("AR button clicked");
+
+  oviniChair.model.visible = false;
+  passModelToScene(oviniChair.model);
+
+});
+
+
 
 /**model anotations:
  * fabric_mat,
@@ -79,6 +94,7 @@ window.addEventListener("resize", resize);
  */
 
 document.querySelector(".animations-btn").addEventListener("click", () => {
+  console.log("###", oviniChair.model); // Log the model separately
   oviniChair.setAnnotationVisibility('all', true);
   oviniChair.triggerInteraction('fabric', () => {
     console.log("Fabric annotation clicked");
