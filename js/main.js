@@ -70,6 +70,9 @@ function init() {
 }
 init();
 
+
+
+console.log(oviniChair.model);
 const arButton = ARButton.createButton(rendererAR, {
   requiredFeatures: ["hit-test"]
 });
@@ -79,7 +82,7 @@ document.body.appendChild(arButton);
 arButton.addEventListener('click', () => {
   console.log("AR button clicked");
 
-  // oviniChair.model.visible = false;
+  oviniChair.model.visible = false;
   passModelToScene(oviniChair.model);
 
 });
@@ -303,6 +306,7 @@ function closeColorPicker() {
   $(".upper-btns").css("display", "flex");
   $(".lower-btns").css("display", "flex");
   $("#canvas").css("height", "100vh");
+  $(".upper-btns, .chose-model").css("display", "flex");
   activateModifierBasedOnWidth();
 }
 
@@ -383,7 +387,7 @@ function bodyClicked() {
   $(".title-x .title").text("BODY COLOR");
   activateAnimationBodyPart();
 
-  $(".upper-btns").css("display", "none");
+  $(".upper-btns, .chose-model").css("display", "none");
   clearColorOptionEventListeners();
   const colorOptions = document.querySelectorAll(".color-option");
   colorOptions.forEach((option) => {
@@ -489,8 +493,7 @@ function setupColorOptions(partType, selectedColor, defaultColor, partObjects) {
 function fabricClicked() {
   $(".title-x .title").text("fabric");
   activateAnimationFabricPart();
-  console.log(CAMERA);
-
+  $(".upper-btns, .chose-model").css("display", "none");
   clearColorOptionEventListeners();
   updateColorOptions(selectedBodyColor);
   setupColorOptions("fabric", selectedFabricColor, "#d4c8a3", "fabric_mat");
@@ -498,6 +501,7 @@ function fabricClicked() {
 
 function lacesClicked() {
   $(".title-x .title").text("laces");
+  $(".upper-btns, .chose-model").css("display", "none");
   activateAnimationLacesPart();
   clearColorOptionEventListeners();
   updateColorOptions(selectedBodyColor);
@@ -506,6 +510,7 @@ function lacesClicked() {
 
 function legsClicked() {
   $(".title-x .title").text("legs");
+  $(".upper-btns, .chose-model").css("display", "none");
   activateAnimationLegsPart();
   clearColorOptionEventListeners();
   updateColorOptions(selectedBodyColor);
