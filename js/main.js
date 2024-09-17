@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { initScene, animate, passModelToScene} from "./scene.js";
 import { animateCamera} from "./cameraAnimation.js";
 import { ModelLoader} from "./model.js";
-import { ARButton } from './arButton.js';
+import { ARButton } from './ARButton.js';
 
 
 //globals
@@ -79,7 +79,7 @@ document.body.appendChild(arButton);
 arButton.addEventListener('click', () => {
   console.log("AR button clicked");
 
-  oviniChair.model.visible = false;
+  // oviniChair.model.visible = false;
   passModelToScene(oviniChair.model);
 
 });

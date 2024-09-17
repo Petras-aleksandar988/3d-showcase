@@ -10,7 +10,7 @@ body {
 
 .chose-model{
   position: absolute;
-  top: 100px;
+  top: 110px;
   z-index: 3;
   cursor: pointer;
   background: #acdddb94;
@@ -38,7 +38,7 @@ body {
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin-top: 32px;
+  margin-top: 41px;
   position: absolute;
   z-index: 4;
 }
@@ -359,10 +359,10 @@ canvas {
     width: 100%;
     margin-right: 0 !important;
   }
-  .upper-btns {
+  /* .upper-btns {
     margin-top: 20px;
     display: flex !important;
-  }
+  } */
   .upper-btns button {
     font-size: 20px;
   }
