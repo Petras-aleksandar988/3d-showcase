@@ -144,6 +144,7 @@ $(".close-animation").click(function () {
 
 document.querySelector(".configurator-btn").addEventListener("click", () => {
   oviniChair.model.visible = true;
+  animateCamera(CAMERA,new THREE.Vector3(0, 0, 0))
   $(".close-animation").css("display", "none");
   $(".lower-btns").css("display", "flex");
   //set camera on start position
