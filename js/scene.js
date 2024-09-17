@@ -110,7 +110,9 @@ async function initializeHitTestSource() {
   session.addEventListener("end", () => {
     hitTestSourceInitialized = false;
     hitTestSource = null;
-    location.reload();
+  
+    $('.configurator-btn').click()
+
   });
 }
 

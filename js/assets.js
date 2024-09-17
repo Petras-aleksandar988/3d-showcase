@@ -1,6 +1,6 @@
 import * as THREE from "three";
 export default [
-    {
+    {   id: "10",
         name: "Ovini chair",
         type: "glbModel",
         path: "/models/ovini_chair.glb",
@@ -15,9 +15,31 @@ export default [
         animateFabricDesctop: new THREE.Vector3(0.6, 1.5, 0.4),
         animateFabricMobile: new THREE.Vector3(0.9, 1.5, 0.5),
         animateLegsDesctop: new THREE.Vector3(1, -0.2,0.3),
-        animateLegsMobile:new THREE.Vector3(1.2, -0.8, 0.9)
+        animateLegsMobile:new THREE.Vector3(1.2, -0.8, 0.9),
+        animateBodyMobile:new THREE.Vector3(2.4, 0.35, 0),
+        animateBodyDesctop: new THREE.Vector3(1.5, 0.35, 0),
+        parts: [
+            { id: "body", label: "Body" },
+            { id: "laces", label: "Laces" },
+            { id: "fabric", label: "Fabric" },
+            { id: "legs", label: "Legs" }
+        ],
+        colors: [
+            { "name": "ALUMINUM", "color": "#d4c8a3" },
+            { "name": "BLACK", "color": "#444444" },
+            { "name": "RED", "color": "#FF0000" },
+            { "name": "BLUE", "color": "#0000FF" },
+            { "name": "GREEN", "color": "#6AA84F" },
+            { "name": "ORANGE", "color": "#E69138" }
+          ], 
+          materials: {
+            body: "metal_mat",    
+            fabric: "fabric_mat", 
+            laces: "laces_mat",   
+            legs: "wood_mat"      
+        },
     },
-    {
+    {    id: "11",
         name: "Tamarack chair",
         type: "glbModel",
         path: "/models/tamarack_chair.glb",
@@ -32,6 +54,25 @@ export default [
         animateFabricDesctop:new THREE.Vector3(1, 1.5, 0.4),
         animateFabricMobile: new THREE.Vector3(2.3, 1.2, 0.9),
         animateLegsDesctop: new THREE.Vector3(1, -0.2, 0.3),
-        animateLegsMobile: new THREE.Vector3(2.5, -0.4, 1.3)
+        animateLegsMobile: new THREE.Vector3(2.5, -0.4, 1.3),
+        animateBodyMobile:new THREE.Vector3(3, 1.5, 0.9),
+        animateBodyDesctop:new THREE.Vector3(1.8, 1, 0.5),
+        parts: [
+            { id: "body", label: "Body" },
+        
+        ],
+        colors: [
+            { "name": "ALUMINUM", "color": "#d4c8a3" },
+            { "name": "BLACK", "color": "#444444" },
+            { "name": "RED", "color": "#FF0000" },
+            { "name": "BLUE", "color": "#0000FF" },
+            { "name": "GREEN", "color": "#6AA84F" },
+            { "name": "ORANGE", "color": "#E69138" }
+          ],
+
+          materials: {
+            body: "tamarack_mat",   
+           
+        },
     }
 ]

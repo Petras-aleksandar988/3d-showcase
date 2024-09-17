@@ -18,6 +18,20 @@ let rendererAR;
 //logic for loading asset from assets.js
 const chairAsset = JSON.parse(localStorage.getItem('selectedChair'));
 
+const container = $('.lower-btns');
+        container.empty();
+
+        const parts = chairAsset.parts;
+
+        parts.forEach(part => {
+            // Create radio input
+            const radioInput = `<div><input type="radio" id="${part.id}" name="part" value="${part.id}" /></div>`;
+            const label = `<label for="${part.id}">${part.label}</label>`;
+
+            // Append the input and label to the container
+            container.append(radioInput);
+            container.append(label);
+        });
 let fabricPosition, legsPosition;
 
 function annotationiconPosition (){
@@ -78,6 +92,7 @@ document.body.appendChild(arButton);
 
 arButton.addEventListener('click', () => {
   console.log("AR button clicked");
+  if ($('#ARButton').text().trim() === 'AR NOT SUPPORTED') return
 
   oviniChair.model.visible = false;
   passModelToScene(oviniChair.model);
@@ -128,7 +143,9 @@ $(".close-animation").click(function () {
 });
 
 document.querySelector(".configurator-btn").addEventListener("click", () => {
+  oviniChair.model.visible = true;
   $(".close-animation").css("display", "none");
+  $(".lower-btns").css("display", "flex");
   //set camera on start position
   activateModifierBasedOnWidth();
 
@@ -354,9 +371,9 @@ function activateModifierBasedOnWidth() {
 }
 function activateAnimationBodyPart() {
   if (window.matchMedia("(max-width: 768px)").matches) {
-    animateCamera(CAMERA, new THREE.Vector3(2.4, 0.35, 0));
+    animateCamera(CAMERA, chairAsset.animateBodyMobile);
   } else {
-    animateCamera(CAMERA, new THREE.Vector3(1.8, 0.35, 0));
+    animateCamera(CAMERA, chairAsset.animateBodyDesctop);
   }
 }
 function activateAnimationFabricPart() {
@@ -386,52 +403,75 @@ function bodyClicked() {
 
   $(".upper-btns, .chose-model").css("display", "none");
   clearColorOptionEventListeners();
-  const colorOptions = document.querySelectorAll(".color-option");
-  colorOptions.forEach((option) => {
-    document.querySelector(".color-chosen").textContent = $(
-      ".color-option.selected"
-    ).data("name");
-    option.style.display = "flex";
-    if (selectedBodyColor !== "") {
-      if (option.dataset.color === selectedBodyColor) {
-        option.classList.add("selected");
 
-        modelOnScene.changeModelColor("metal_mat", selectedBodyColor);
-        modelOnScene.changeModelColor("fabric_mat", selectedFabricColor);
-        modelOnScene.changeModelColor("laces_mat", selectedLacesColor);
-        modelOnScene.changeModelColor("wood_mat", selectedLegsColor);
-      } else {
-        option.classList.remove("selected");
-      }
-    } else {
-      modelOnScene.changeModelColor("metal_mat", "#d4c8a3");
+ 
+  const colors = chairAsset.colors;
+  const materials = chairAsset.materials;
+
+  const colorOptionsContainer = document.querySelector(".color-options");
+  
+ 
+  colorOptionsContainer.innerHTML = '';
+
+  colors.forEach((color) => {
+    const colorOption = document.createElement('div');
+    colorOption.classList.add('color-option');
+    colorOption.dataset.color = color.color;
+    colorOption.dataset.name = color.name;
+
+   
+    if (color.color === selectedBodyColor) {
+      colorOption.classList.add("selected");
     }
 
-    option.addEventListener("click", function () {
-      colorOptions.forEach((opt) => opt.classList.remove("selected"));
-      const element = this;
+  
+    colorOption.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 56 56" fill="none">
+        <circle cx="28" cy="28" r="23" fill="${color.color}" />
+        <circle cx="28" cy="28" r="27.5" stroke="#E5E5E5"/>
+      </svg>
+    `;
 
-      element.classList.add("selected");
-      const newSelectedColor = element.dataset.color;
+ 
+    colorOption.addEventListener("click", function () {
+      // Deselect all color options
+      document.querySelectorAll(".color-option").forEach((opt) => opt.classList.remove("selected"));
+      
+      // Mark the clicked one as selected
+      this.classList.add("selected");
 
-      if (newSelectedColor !== selectedBodyColor) {
+      // Update selectedBodyColor
+      selectedBodyColor = this.dataset.color;
 
-        // Body color has changed
-        selectedBodyColor = newSelectedColor; // Update the new selected color
-        document.querySelector(".color-chosen").textContent =
-          element.dataset.name;
-          selectedFabricColor = "#d4c8a3";
-          selectedLegsColor = "#d4c8a3";
-          selectedLacesColor = "#d4c8a3";
-        modelOnScene.changeModelColor("metal_mat", selectedBodyColor);
-        modelOnScene.changeModelColor("fabric_mat",  selectedFabricColor);
-        modelOnScene.changeModelColor("laces_mat",  selectedLacesColor);
-        modelOnScene.changeModelColor("wood_mat", selectedLegsColor);
+      // Update the color-chosen text
+      document.querySelector(".color-chosen").textContent = this.dataset.name;
 
-      }
+      // Update model colors accordingly
+      selectedFabricColor = "#d4c8a3"; // Set defaults for other parts
+      selectedLegsColor = "#d4c8a3";
+      selectedLacesColor = "#d4c8a3";
+      modelOnScene.changeModelColor(materials.body, selectedBodyColor);   
+      modelOnScene.changeModelColor(materials.fabric, selectedFabricColor);
+      modelOnScene.changeModelColor(materials.laces, selectedLacesColor);
+      modelOnScene.changeModelColor(materials.legs, selectedLegsColor);
     });
+
+    // Append the new color option to the container
+    colorOptionsContainer.appendChild(colorOption);
   });
+
+  // Update initially chosen color if any
+  document.querySelector(".color-chosen").textContent = document.querySelector(".color-option.selected")?.dataset.name || colors[0].name;
+
+ 
+  if (selectedBodyColor !== "") {
+    modelOnScene.changeModelColor(materials.body, selectedBodyColor);
+  } else {
+    
+    modelOnScene.changeModelColor(materials.body, colors[0].color);
+  }
 }
+
 
 function setupColorOptions(partType, selectedColor, defaultColor, partObjects) {
   const colorOptions = document.querySelectorAll(".color-option");
@@ -493,7 +533,7 @@ function fabricClicked() {
   $(".upper-btns, .chose-model").css("display", "none");
   clearColorOptionEventListeners();
   updateColorOptions(selectedBodyColor);
-  setupColorOptions("fabric", selectedFabricColor, "#d4c8a3", "fabric_mat");
+  setupColorOptions("fabric", selectedFabricColor, "#d4c8a3", chairAsset.materials.fabric);
 }
 
 function lacesClicked() {
@@ -502,7 +542,7 @@ function lacesClicked() {
   activateAnimationLacesPart();
   clearColorOptionEventListeners();
   updateColorOptions(selectedBodyColor);
-  setupColorOptions("laces", selectedLacesColor, "#d4c8a3", "laces_mat");
+  setupColorOptions("laces", selectedLacesColor, "#d4c8a3", chairAsset.materials.laces);
 }
 
 function legsClicked() {
@@ -511,7 +551,7 @@ function legsClicked() {
   activateAnimationLegsPart();
   clearColorOptionEventListeners();
   updateColorOptions(selectedBodyColor);
-  setupColorOptions("legs", selectedLegsColor, "#d4c8a3", "wood_mat");
+  setupColorOptions("legs", selectedLegsColor, "#d4c8a3", chairAsset.materials.legs);
 }
 
 function handleImageDisplay(inputSelector, shouldDisplay) {

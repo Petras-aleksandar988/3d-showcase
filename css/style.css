@@ -163,6 +163,8 @@ canvas {
 }
 .lower-btns {
   display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -171,7 +173,6 @@ canvas {
 }
 
 .lower-btns label {
-  margin: 0 10px;
   color: #121010;
   background-color: #acdddb94 !important;
   font-family: "Manrope", sans-serif;
@@ -243,8 +244,8 @@ canvas {
   width: 100%;
 }
 .color-option {
-  width: 56px;
-  height: 56px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   border: 1px solid transparent;
   cursor: pointer;
@@ -465,10 +466,6 @@ canvas {
     right: -30px;
   }
   #color-optionSvg {
-    width: 48px;
-    height: 48px;
-  }
-  .color-option {
     width: 48px;
     height: 48px;
   }
