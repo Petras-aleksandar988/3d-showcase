@@ -70,9 +70,6 @@ function init() {
 }
 init();
 
-
-
-console.log(oviniChair.model);
 const arButton = ARButton.createButton(rendererAR, {
   requiredFeatures: ["hit-test"]
 });
