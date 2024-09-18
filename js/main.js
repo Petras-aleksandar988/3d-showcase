@@ -83,6 +83,7 @@ function init() {
   resize();
 }
 init();
+let defaultModelPosition = CAMERA.projectionMatrix.elements
 
 const arButton = ARButton.createButton(rendererAR, {
   requiredFeatures: ["hit-test"]
@@ -93,7 +94,8 @@ document.body.appendChild(arButton);
 arButton.addEventListener('click', () => {
   console.log("AR button clicked");
   if ($('#ARButton').text().trim() === 'AR NOT SUPPORTED') return
-
+ console.log(oviniChair.model);
+ 
   oviniChair.model.visible = false;
   passModelToScene(oviniChair.model);
 
@@ -143,8 +145,8 @@ $(".close-animation").click(function () {
 });
 
 document.querySelector(".configurator-btn").addEventListener("click", () => {
+  CAMERA.projectionMatrix.elements = defaultModelPosition
   oviniChair.model.visible = true;
-  animateCamera(CAMERA,new THREE.Vector3(0, 0, 0))
   $(".close-animation").css("display", "none");
   $(".lower-btns").css("display", "flex");
   //set camera on start position
