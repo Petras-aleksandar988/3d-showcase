@@ -83,8 +83,6 @@ function init() {
   resize();
 }
 init();
-let defaultModelPosition = CAMERA.projectionMatrix.elements
-
 const arButton = ARButton.createButton(rendererAR, {
   requiredFeatures: ["hit-test"]
 });
@@ -144,9 +142,7 @@ $(".close-animation").click(function () {
   $(this).css("display", "none");
 });
 
-document.querySelector(".configurator-btn").addEventListener("click", () => {
-  CAMERA.projectionMatrix.elements = defaultModelPosition
-  oviniChair.model.visible = true;
+document.querySelector(".configurator-btn").addEventListener("click", () => {  
   $(".close-animation").css("display", "none");
   $(".lower-btns").css("display", "flex");
   //set camera on start position

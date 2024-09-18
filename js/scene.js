@@ -87,12 +87,12 @@ function onSelect() {
   if (reticle.visible && selectedModel) {
     selectedModel.traverse((child) => {
       if (child.isMesh) {
-
+        
         child.position.setFromMatrixPosition(reticle.matrix);
         child.quaternion.setFromRotationMatrix(reticle.matrix);
       }
     });
-    selectedModel.visible = true;
+    selectedModel.visible = true;  
   }
 }
 
@@ -110,7 +110,15 @@ async function initializeHitTestSource() {
   session.addEventListener("end", () => {
     hitTestSourceInitialized = false;
     hitTestSource = null;
-  
+    selectedModel.traverse((child) => {
+      console.log(child);
+      
+      if (child.isMesh) {
+        // Reset position to default
+        child.position.set(0, 0, 0);
+      }
+    });
+   
     $('.configurator-btn').click()
 
   });
