@@ -13,6 +13,9 @@ let reticle;
 let renderer;
 let scene;
 let controller;
+let selectedModel = null;
+
+var touchDown, touchX, touchY, deltaX;
 
 const ORBIT_TARGET = new THREE.Vector3(0, Y_AXIS, 0);
 const HDRI_PATH = '/hdri/studio005small.hdr';
@@ -21,6 +24,7 @@ export function initScene(canvas, chairAsset) {
   CAMERA_POSITION = ($(window).width() < 768) ? chairAsset.cameraPosMobile : chairAsset.cameraPos;
 
   scene = new THREE.Scene();
+
   const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
   renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance", alpha: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -63,7 +67,52 @@ export function initScene(canvas, chairAsset) {
   controller.addEventListener('select', onSelect);
   scene.add(controller);
 
+  addTouchEventListeners();
+
   return { scene, camera, renderer, orbit };
+}
+function addTouchEventListeners() {
+  if (!renderer || !renderer.domElement) {
+    console.error("Renderer not initialized. Unable to add touch event listeners.");
+    return;
+  }
+
+  renderer.domElement.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    touchDown = true;
+    touchX = e.touches[0].pageX;
+    touchY = e.touches[0].pageY;
+  }, false);
+
+  renderer.domElement.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    touchDown = false;
+  }, false);
+
+  renderer.domElement.addEventListener('touchmove', function(e) {
+    e.preventDefault();
+  
+    if (!touchDown) {
+      return;
+    }
+
+    deltaX = e.touches[0].pageX - touchX;
+    deltaY = e.touches[0].pageY - touchY;
+    touchX = e.touches[0].pageX;
+    touchY = e.touches[0].pageY;
+
+    rotateObject();
+  }, false);
+}
+
+
+
+function rotateObject(){
+  selectedModel.traverse((child) => {
+    if (child.isMesh) {
+      child.rotation.y += deltaX * 0.01; // Horizontal rotation (Y-axis)
+    }
+  });
 }
 
 function addReticleToScene() {
@@ -75,13 +124,17 @@ function addReticleToScene() {
   scene.add(reticle);
 }
 
-
-let selectedModel = null;
-
 export function passModelToScene(model) {
   selectedModel = model;
 }
 
+export function sceneBackgroundSet(remove = false){
+  if(remove){
+    scene.background = null
+  }else{
+    scene.background = new THREE.Color(BACKGROUND_COLOR);
+  }
+}
 
 function onSelect() {
   if (reticle.visible && selectedModel) {
@@ -116,8 +169,11 @@ async function initializeHitTestSource() {
       if (child.isMesh) {
         // Reset position to default
         child.position.set(0, 0, 0);
+        child.rotation.set(0, 0, 0);
       }
     });
+    scene.remove(reticle);
+    sceneBackgroundSet(false);
    
     $('.configurator-btn').click()
 

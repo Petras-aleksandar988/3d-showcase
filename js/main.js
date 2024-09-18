@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { initScene, animate, passModelToScene} from "./scene.js";
+import { initScene, animate, passModelToScene, sceneBackgroundSet} from "./scene.js";
 import { animateCamera} from "./cameraAnimation.js";
 import { ModelLoader} from "./model.js";
 import { ARButton } from './ARButton.js';
@@ -96,6 +96,7 @@ arButton.addEventListener('click', () => {
  
   oviniChair.model.visible = false;
   passModelToScene(oviniChair.model);
+  sceneBackgroundSet(true);
 
 });
 
