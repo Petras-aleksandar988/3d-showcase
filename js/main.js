@@ -44,14 +44,15 @@ function annotationiconPosition (){
 }
 }
 
+const loadingOverlay = document.getElementById("loading-overlay");
 function init() {
+loadingOverlay.style.display = "flex";
   const canvas = document.getElementById("canvas");
   const { scene, camera, renderer } = initScene(canvas, chairAsset);
   CAMERA = camera;
   rendererAR = renderer;
 
-  const loadingOverlay = document.getElementById("loading-overlay");
-  loadingOverlay.style.display = "flex";
+
   
   // The position of the annotation depends on the display
   annotationiconPosition ();
@@ -59,7 +60,6 @@ function init() {
   oviniChair = new ModelLoader(scene, chairAsset.path, camera);
   modelOnScene = oviniChair;
     
-  loadingOverlay.style.display = "none";
  
 
   oviniChair.addAnnotation('fabric', fabricPosition, chairAsset.pathFabric, 0.2, 0.1);
@@ -83,6 +83,9 @@ function init() {
   resize();
 }
 init();
+
+  loadingOverlay.style.display = "none";
+
 const arButton = ARButton.createButton(rendererAR, {
   requiredFeatures: ["hit-test"]
 });
