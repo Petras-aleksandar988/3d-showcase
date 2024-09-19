@@ -42,7 +42,7 @@ export default [
     {    id: "11",
         name: "Tamarack chair",
         type: "glbModel",
-        path: "/models/tamarack_chair.glb",
+        path: "/models/tamarack_chair_w_shadow.glb",
         pathFabric: "/textures/fabric.png",       
         pathLegs: "/textures/legs.png",   
         annotationFabricPos: new THREE.Vector3(0, 0.55, 0.4),
