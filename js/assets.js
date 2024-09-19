@@ -74,5 +74,11 @@ export default [
             body: "tamarack_mat",   
            
         },
-    }
+    },
+    {    id: "12",
+        name: "menu_tailor_sofa",
+        type: "glbModel",
+        path: "/models/menu_tailor_sofa.glb",
+    },
+
 ]
