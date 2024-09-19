@@ -16,7 +16,7 @@ let controller;
 let selectedModel = null;
 
 let rotating = false;  
-let rotationSpeed = 0.025;  
+let rotationSpeed = 0.015;  
 
 
 const ORBIT_TARGET = new THREE.Vector3(0, Y_AXIS, 0);
