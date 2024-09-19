@@ -3,7 +3,7 @@ export default [
     {   id: "10",
         name: "Ovini chair",
         type: "glbModel",
-        path: "/models/ovini_chair.glb",
+        path: "/models/ovini_chair_w_shadow.glb",
         pathFabric: "/textures/fabric.png",       
         pathLegs: "/textures/legs.png",   
         annotationFabricPos: new THREE.Vector3(0, 0.55, 0.4),
