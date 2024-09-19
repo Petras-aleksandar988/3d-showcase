@@ -8,7 +8,7 @@ export default [
         pathLegs: "/textures/legs.png",   
         annotationFabricPos: new THREE.Vector3(0, 0.55, 0.4),
         annotationFabricMobilePos: new THREE.Vector3(0, 0.7, 0.1),
-        annotationLegsPos:  new THREE.Vector3(0, 0.15, -0.3),
+        annotationLegsPos:  new THREE.Vector3(0, 0.15, -0.4),
         annotationLegsMobilePos: new THREE.Vector3(0, -0.08, -0.1),
         cameraPos: new THREE.Vector3(2, 0.35, 0),
         cameraPosMobile: new THREE.Vector3(2.6, 0.35, 0),
@@ -25,7 +25,7 @@ export default [
             { id: "legs", label: "Legs" }
         ],
         colors: [
-            { "name": "ALUMINUM", "color": "#d4c8a3" },
+            { "name": "LIGHT-WOOD", "color": "#d4c8a3" },
             { "name": "BLACK", "color": "#444444" },
             { "name": "RED", "color": "#FF0000" },
             { "name": "BLUE", "color": "#0000FF" },
@@ -46,15 +46,15 @@ export default [
         pathFabric: "/textures/fabric.png",       
         pathLegs: "/textures/legs.png",   
         annotationFabricPos: new THREE.Vector3(0, 0.55, 0.4),
-        annotationFabricMobilePos: new THREE.Vector3(0, 0.7, 0.1),
+        annotationFabricMobilePos: new THREE.Vector3(0, 0.7, 0.3),
         annotationLegsPos:  new THREE.Vector3(0, 0.15, -0.6),
         annotationLegsMobilePos: new THREE.Vector3(0, -0.25, -0.3),
         cameraPos: new THREE.Vector3(2.3, 1.3, 1.5),
         cameraPosMobile: new THREE.Vector3(3.5, 2, 1.9),
         animateFabricDesctop:new THREE.Vector3(1, 1.5, 0.4),
-        animateFabricMobile: new THREE.Vector3(2.3, 1.2, 0.9),
-        animateLegsDesctop: new THREE.Vector3(1, -0.2, 0.3),
-        animateLegsMobile: new THREE.Vector3(2.5, -0.4, 1.3),
+        animateFabricMobile: new THREE.Vector3(1, 1, 1.5),
+        animateLegsDesctop: new THREE.Vector3(1, -0.2, -1.3),
+        animateLegsMobile: new THREE.Vector3(1.5, 1, -2),
         animateBodyMobile:new THREE.Vector3(3, 1.5, 0.9),
         animateBodyDesctop:new THREE.Vector3(1.8, 1, 0.5),
         parts: [
@@ -62,7 +62,7 @@ export default [
         
         ],
         colors: [
-            { "name": "ALUMINUM", "color": "#d4c8a3" },
+            { "name": "LIGHT-WOOD", "color": "#d4c8a3" },
             { "name": "BLACK", "color": "#444444" },
             { "name": "RED", "color": "#FF0000" },
             { "name": "BLUE", "color": "#0000FF" },

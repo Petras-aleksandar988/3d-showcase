@@ -174,7 +174,7 @@ async function initializeHitTestSource() {
     });
     scene.remove(reticle);
     sceneBackgroundSet(false);
-   
+    selectedModel.visible = true;  
     $('.configurator-btn').click()
 
   });
