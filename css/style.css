@@ -7,10 +7,8 @@ body {
   height: 100dvh;
   background: #fff;
 }
-
-.chose-model{
+.ar-button{
   color: #121010;
-  background: #acdddb94 !important;
   width: 100%;
   text-align: center;
   font-size: 22px;
@@ -24,8 +22,26 @@ body {
   background: none;
   cursor: pointer;
   position: relative;
+}
+.chose-model{
+  color: #121010;
+  background: #acdddb94 !important;
+  width: 100%;
+  width: 200px;
+  text-align: center;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.44px;
+  text-transform: uppercase;
+  border: none;
+  height: 35px;
+  background: none;
+  cursor: pointer;
+  position: relative;
   border-radius: 8px 0 0 8px;
-  font-size: 20px;
+  font-size: 16px;
 }
 
 
@@ -59,11 +75,11 @@ body {
   background: rgba(255, 255, 255, 0.48);
   backdrop-filter: blur(8px);
 }
-.upper-btns .configurator, .chose-model  {
+.upper-btns .configurator  {
   border-radius: 8px 0 0 8px;
   width: 300px;
 }
-.upper-btns .animations ,.ar-div{
+.upper-btns .animations {
   border-radius: 0 8px 8px 0;
   width: 300px;
 }
@@ -107,6 +123,11 @@ body {
   background: none;
   cursor: pointer;
   position: relative;
+}
+.choose-ar .ar-div button{
+height: 35px;
+font-size: 16px;
+width: 200px;
 }
 
 .configurator-btn.active::before,
@@ -391,7 +412,7 @@ position: none;
     margin-right: 0 !important;
   }
 
-  .upper-btns button, .chose-model {
+  .upper-btns button{
     font-size: 20px;
   }
 
@@ -514,7 +535,7 @@ position: none;
   .lower-btns label {
     width: 115px;
   }
-  .upper-btns button,.chose-model {
+  .upper-btns button{
     font-size: 18px;
   }
   .upper-btns .configurator {
