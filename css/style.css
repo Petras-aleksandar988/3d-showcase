@@ -36,7 +36,7 @@ body {
   letter-spacing: 0.44px;
   text-transform: uppercase;
   border: none;
-  height: 35px;
+  height: 40px;
   background: none;
   cursor: pointer;
   position: relative;
@@ -125,7 +125,7 @@ body {
   position: relative;
 }
 .choose-ar .ar-div button{
-height: 35px;
+height: 40px;
 font-size: 16px;
 width: 200px;
 }

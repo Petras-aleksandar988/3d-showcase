@@ -187,8 +187,6 @@ document.querySelector(".configurator-btn").addEventListener("click", () => {
 $(document).ready(function () {
   $(window).resize(function () {   
     activateModifierBasedOnWidth();
-    applyMarginBasedOnChange();
-    applyMarginBasedOnChangeMobile();
   annotationiconPosition () 
   $(".close-animation").css("display", "none");
   
@@ -209,42 +207,6 @@ let selectedFabricColor = chairAsset.colors[0].color;
 let selectedLacesColor = chairAsset.colors[0].color;
 let selectedLegsColor = chairAsset.colors[0].color;
 
-function applyMarginBasedOnChangeMobile() {
-  const isMobile = window.matchMedia("(max-width: 880px)").matches;
-  const isActiveAnimation = $(".animations-btn.active").length > 0;
-  const isActiveConfigurator = $(".configurator-btn.active").length > 0;
-  const isCheckedRadio =
-    $('.lower-btns input[type="radio"]:checked').length > 0;
-
-  if (isMobile) {
-    if (isCheckedRadio) {
-      $("#canvas").css("margin-top", "-145px");
-      $(".lower-btns").css({ display: "none" });
-    } else {
-      $(".lower-btns").css("display", "flex");
-      $("#canvas").css("height", "100vh");
-    }
-  } else {
-    $("#canvas").css({ "margin-top": "0" });
-    $(".lower-btns").css("display", "flex");
-  }
-  if (!isCheckedRadio) {
-    $("#canvas").css("margin-right", "0");
-  }
-  if (isActiveAnimation) {
-    $(".lower-btns").css("display", "none");
-    $("#color-picker").css("display", "none");
-    $(".upper-btns").css("display", "flex");
-    $("#canvas").css({
-      "margin-right": "0",
-      width: "100%",
-      height: "100vh",
-    });
-    $("#canvas").css({ "margin-top": "0" });
-
-    $('.lower-btns input[type="radio"]:checked').prop("checked", false);
-  }
-}
 
 function animateFabric() {
   if (window.matchMedia("(max-width: 768px)").matches) {
@@ -261,23 +223,7 @@ function animatelegs() {
   }
 }
 
-function applyMarginBasedOnChange() {
-  const colorPicker = $("#color-picker");
-  const colorOptions = $(".color-options");
-  const container3d = $("#canvas");
 
-  if (window.matchMedia("(max-width: 1000px)").matches) {
-    container3d.css("margin-right", "25%");
-    colorPicker.css({ right: "10px", width: "260px" });
-    colorOptions.css("column-gap", "15px");
-  } else if (window.matchMedia("(max-width: 1210px)").matches) {
-    colorOptions.css("column-gap", "15px");
-  } else {
-    container3d.css("margin-right", "0");
-    container3d.css("margin-right", "0");
-    colorPicker.css("right", "35px");
-  }
-}
 
 // event that define any chage on suitcase parts
 $('.lower-btns input[type="radio"]').on("change", function () {
@@ -290,8 +236,6 @@ $('.lower-btns input[type="radio"]').on("change", function () {
   } else {
     $("#color-picker").css("display", "flex").hide().fadeIn("fast");
   }
-  applyMarginBasedOnChange();
-  applyMarginBasedOnChangeMobile();
 });
 // logic for each suitcase part
 function handleRadioChange(selectedValue) {
@@ -348,11 +292,9 @@ buttons.on("click", function () {
 });
 
 $(document).on("click", ".animations-btn.active", function () {
-  applyMarginBasedOnChangeMobile();
 });
 
 $(document).on("click", ".configurator-btn.active", function () {
-  applyMarginBasedOnChangeMobile();
 });
 
 function closeColorPicker() {
