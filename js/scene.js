@@ -26,6 +26,7 @@ export function initScene(canvas, chairAsset) {
   CAMERA_POSITION = ($(window).width() < 768) ? chairAsset.cameraPosMobile : chairAsset.cameraPos;
 
   scene = new THREE.Scene();
+  sceneBackgroundSet(true);
 
   const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
   renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance", alpha: true });
@@ -72,11 +73,8 @@ export function initScene(canvas, chairAsset) {
 
   scene.add(controller);
 
-  
-
   return { scene, camera, renderer, orbit };
 }
-
 
 
 //###########################
@@ -94,13 +92,12 @@ export function passModelToScene(model) {
 }
 
 export function sceneBackgroundSet(remove = false){
-  if(remove){
-    scene.background = null
-  }else{
+  if(remove){ 
     scene.background = new THREE.Color(BACKGROUND_COLOR);
+  }else{
+    scene.background = null;
   }
 }
-
 
 
 function onSelectEnd(event) {
@@ -134,22 +131,6 @@ function rotateModel() {
   }
 }
 
-// function onSelect() {
-//   if (reticle.visible && selectedModel) {
-//     selectedModel.traverse((child) => {
-//       if (child.isMesh) {
-//         child.position.setFromMatrixPosition(reticle.matrix);
-//         child.quaternion.setFromRotationMatrix(reticle.matrix);
-//       }
-//     });
-//     selectedModel.visible = true;
-    
-//     // Only start rotation when controller is pressed, not automatically
-//     // rotating = true;  // Ensure rotation starts after selecting
-//   }
-// }
-
-
 let hitTestSource = null;
 let localSpace = null;
 let hitTestSourceInitialized = false;
@@ -160,6 +141,7 @@ async function initializeHitTestSource() {
   hitTestSource = await session.requestHitTestSource({ space: viewerSpace });
   localSpace = await session.requestReferenceSpace("local");
   hitTestSourceInitialized = true;
+  //exit
   session.addEventListener("end", () => {
     hitTestSourceInitialized = false;
     hitTestSource = null;
@@ -173,7 +155,7 @@ async function initializeHitTestSource() {
       }
     });
     scene.remove(reticle);
-    sceneBackgroundSet(false);
+    sceneBackgroundSet(true);
     selectedModel.visible = true;  
     $('.configurator-btn').click()
 
