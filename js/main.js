@@ -61,9 +61,8 @@ const legsIconSize = getIconSize(
   chairAsset.legsIconSizeDesktop
 );
 
-const loadingOverlay = document.getElementById("loading-overlay");
+
 function init() {
-loadingOverlay.style.display = "flex";
   const canvas = document.getElementById("canvas");
   const { scene, camera, renderer } = initScene(canvas, chairAsset);
   CAMERA = camera;
@@ -102,7 +101,6 @@ loadingOverlay.style.display = "flex";
 }
 init();
 
-  loadingOverlay.style.display = "none";
 
 const arButton = ARButton.createButton(rendererAR, {
   requiredFeatures: ["hit-test"]

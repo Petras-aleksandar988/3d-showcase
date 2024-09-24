@@ -17,7 +17,9 @@ export class ModelLoader {
     }
 
     async loadModel(modelPath) {
+        const loadingOverlay = document.getElementById("loading-overlay");
         try {
+            loadingOverlay.style.display = "flex";
             // Fetch the modified GLB file as an ArrayBuffer
             const response = await fetch(modelPath);
             const arrayBuffer = await response.arrayBuffer();
@@ -40,7 +42,7 @@ export class ModelLoader {
                             this.model = gltf.scene;
                             this.scene.add(this.model);
                             console.log('Model loaded and reversed successfully.');
-    
+                            loadingOverlay.style.display = "none";
                             // Clean up the URL object after loading
                             URL.revokeObjectURL(revertedUrl);
                             resolve(this.model);
@@ -48,6 +50,7 @@ export class ModelLoader {
                         undefined,
                         (error) => {
                             console.error('Error loading reverted GLB:', error);
+                            loadingOverlay.style.display = "none";
                             reject(error);
                         }
                     );
@@ -57,6 +60,7 @@ export class ModelLoader {
             }
         } catch (error) {
             console.error('Error during the model loading process:', error);
+            loadingOverlay.style.display = "none";
             throw error;
         }
     }
