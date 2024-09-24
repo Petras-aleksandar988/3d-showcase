@@ -23,8 +23,9 @@ body, html {
 
 .model {
     display: flex;
+    height: 100px;
     align-items: center;
-    justify-content:space-around;
+    justify-content:space-between;
     border: 1px solid black;
     border-radius: 8px;
     margin: 0 auto;
@@ -49,4 +50,8 @@ body, html {
 .model img {
     width: 100px; /* Adjust the size as needed */
     height: auto;
+}
+#sofa img {
+    width: 140px; /* Adjust the size as needed */
+    height:90px;
 }

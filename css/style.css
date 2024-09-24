@@ -115,9 +115,8 @@ body {
   padding: 0 25px;
 }
 .close-animation {
-  bottom: -10px;
-  right: 20%px;
-  position: relative;
+  top: 10px;
+  position: absolute;
   z-index: 6;
 }
 .close-animation img {
