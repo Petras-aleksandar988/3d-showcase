@@ -16,26 +16,74 @@ export class ModelLoader {
         this.loadModel(modelPath);
     }
 
-    loadModel(modelPath) {
-        return new Promise((resolve, reject) => {
-            this.loader.load(
-                modelPath,
-                (gltf) => {
-                    this.model = gltf.scene;
-                    this.scene.add(this.model);
-                    // this.model.position.z = -2;
-                    console.log('Model loaded successfully.');
-                    
-                    resolve();
-                },
-                undefined,
-                (error) => {
-                    console.error('Error loading model:', error);
-                    reject(error);
-                }
-            );
-        });
+    async loadModel(modelPath) {
+        try {
+            // Fetch the modified GLB file as an ArrayBuffer
+            const response = await fetch(modelPath);
+            const arrayBuffer = await response.arrayBuffer();
+            const uint8Array = new Uint8Array(arrayBuffer);
+    
+         
+            if (uint8Array[0] === 0x67 && uint8Array[1] === 0x6C && uint8Array[2] === 0x74 && uint8Array[3] === 0x66) {
+                uint8Array[2] = 0x54; 
+                uint8Array[3] = 0x46; 
+    
+                // Create a Blob from the modified Uint8Array
+                const revertedBlob = new Blob([uint8Array], { type: 'model/gltf-binary' });
+                const revertedUrl = URL.createObjectURL(revertedBlob);
+    
+                // Load the reverted Blob into Three.js
+                return new Promise((resolve, reject) => {
+                    this.loader.load(
+                        revertedUrl,
+                        (gltf) => {
+                            this.model = gltf.scene;
+                            this.scene.add(this.model);
+                            console.log('Model loaded and reversed successfully.');
+    
+                            // Clean up the URL object after loading
+                            URL.revokeObjectURL(revertedUrl);
+                            resolve(this.model);
+                        },
+                        undefined,
+                        (error) => {
+                            console.error('Error loading reverted GLB:', error);
+                            reject(error);
+                        }
+                    );
+                });
+            } else {
+                throw new Error('File format is not as expected.');
+            }
+        } catch (error) {
+            console.error('Error during the model loading process:', error);
+            throw error;
+        }
     }
+    
+    
+
+    //old loader
+    // loadModel(modelPath) {
+    //     return new Promise((resolve, reject) => {
+    //         this.loader.load(
+    //             modelPath,
+    //             (gltf) => {
+    //                 this.model = gltf.scene;
+    //                 this.scene.add(this.model);
+    //                 // this.model.position.z = -2;
+    //                 console.log('Model loaded successfully.');
+                    
+    //                 resolve();
+    //             },
+    //             undefined,
+    //             (error) => {
+    //                 console.error('Error loading model:', error);
+    //                 reject(error);
+    //             }
+    //         );
+    //     });
+    // }
 
 
     changeModelColor(materialName, color, removeMap = false) {

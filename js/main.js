@@ -119,7 +119,7 @@ arButton.addEventListener('click', () => {
  
   oviniChair.model.visible = false;
   passModelToScene(oviniChair.model);
-  sceneBackgroundSet(true);
+  sceneBackgroundSet(false);
 
 });
 
