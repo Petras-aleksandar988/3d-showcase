@@ -44,6 +44,23 @@ function annotationiconPosition (){
 }
 }
 
+function getIconSize(mobileSize, desktopSize) {
+  if (window.matchMedia("(max-width: 768px)").matches) {
+    return mobileSize;
+  } else {
+    return desktopSize;
+  }
+}
+
+const fabricIconSize = getIconSize(
+  chairAsset.fabricIconSizeMobile, 
+  chairAsset.fabricIconSizeDesktop
+);
+const legsIconSize = getIconSize(
+  chairAsset.legsIconSizeMobile, 
+  chairAsset.legsIconSizeDesktop
+);
+
 const loadingOverlay = document.getElementById("loading-overlay");
 function init() {
 loadingOverlay.style.display = "flex";
@@ -62,8 +79,9 @@ loadingOverlay.style.display = "flex";
     
  
 
-  oviniChair.addAnnotation('fabric', fabricPosition, chairAsset.pathFabric, 0.2, 0.1);
-  oviniChair.addAnnotation('legs', legsPosition, chairAsset.pathLegs, 0.23, 0.115);
+  oviniChair.addAnnotation('fabric', fabricPosition, chairAsset.pathFabric,   fabricIconSize.width,
+    fabricIconSize.height  );
+  oviniChair.addAnnotation('legs', legsPosition, chairAsset.pathLegs,  legsIconSize.width, legsIconSize.height);
  
   //if name is all it will change for all annotations, otherwise only by name
   oviniChair.setAnnotationVisibility('all', false);
@@ -113,54 +131,45 @@ arButton.addEventListener('click', () => {
  */
 
 document.querySelector(".animations-btn").addEventListener("click", () => {
-  console.log("###", oviniChair.model); // Log the model separately
-  oviniChair.setAnnotationVisibility('all', true);
+  oviniChair.setAnnotationVisibility('all', true); // Show all annotations
+
+  activateModifierBasedOnWidth(); 
+  $(".lower-btns").css("display", "none");
+
+  // Handle fabric interaction
   oviniChair.triggerInteraction('fabric', () => {
     console.log("Fabric annotation clicked");
-  });
-})
-
-
-document.querySelector(".animations-btn").addEventListener("click", () => {
-  activateModifierBasedOnWidth();
-  oviniChair.setAnnotationVisibility('all', true);
-  oviniChair.triggerInteraction('fabric', () => {
-    animateFabric();
-    oviniChair.setAnnotationVisibility('all', false);
+    animateFabric(); // Trigger fabric animation
+    oviniChair.setAnnotationVisibility('all', false); // Hide annotations
 
     $(".close-animation").css("display", "flex");
     $(".upper-btns-container").animate({
-      opacity: 0,     
-      top: "-20px"    
-  }, 400, function() {
-  
+      opacity: 0,
+      top: "-20px"
+    }, 400, function() {
       $(this).css("display", "none");
+    });
   });
 
-  });
-  
-  oviniChair.triggerInteraction('legs', ()=>{
-    animatelegs();
-    oviniChair.setAnnotationVisibility('all', false);
+  // Handle legs interaction
+  oviniChair.triggerInteraction('legs', () => {
+    animatelegs(); // Trigger legs animation
+    oviniChair.setAnnotationVisibility('all', false); // Hide annotations
+
     $(".close-animation").css("display", "flex");
-    
     $(".upper-btns-container").animate({
-      opacity: 0,     
-      top: "-20px"    
-  }, 400, function() {
-  
+      opacity: 0,
+      top: "-20px"
+    }, 400, function() {
       $(this).css("display", "none");
+    });
   });
-  })
 });
+
 
 function closeAnimationBtn (){
 
   $(".close-animation").click(function () {
-    activateModifierBasedOnWidth();
-    oviniChair.setAnnotationVisibility('all', true);
-    $(this).css("display", "none");
-  
     $(".upper-btns-container").css({
       opacity: 0,       
       top: "-20px",     
@@ -169,6 +178,10 @@ function closeAnimationBtn (){
       opacity: 1,      
       top: "0px"        
   }, 400);  
+    activateModifierBasedOnWidth();
+    oviniChair.setAnnotationVisibility('all', true);
+    $(this).css("display", "none");
+  
   
   });
 }
@@ -177,6 +190,7 @@ closeAnimationBtn ()
 
 document.querySelector(".configurator-btn").addEventListener("click", () => {  
   $(".close-animation").css("display", "none");
+  $(".lower-btns").css("display", "flex");
 
   //set camera on start position
   activateModifierBasedOnWidth();
@@ -207,6 +221,26 @@ let selectedFabricColor = chairAsset.colors[0].color;
 let selectedLacesColor = chairAsset.colors[0].color;
 let selectedLegsColor = chairAsset.colors[0].color;
 
+function applyMarginBasedOnChangeMobile() {
+  const isMobile = window.matchMedia("(max-width: 880px)").matches;
+
+  const isCheckedRadio =
+    $('.lower-btns input[type="radio"]:checked').length > 0;
+
+  if (isMobile) {
+    if (isCheckedRadio) {
+      $("#canvas").css("margin-top", "-145px");
+      $(".lower-btns").css({ display: "none" });
+    } else {
+      $(".lower-btns").css("display", "flex");
+    }
+  } else {
+    $("#canvas").css({ "margin-top": "0" });
+    $(".lower-btns").css("display", "flex");
+  }
+
+}
+
 
 function animateFabric() {
   if (window.matchMedia("(max-width: 768px)").matches) {
@@ -229,7 +263,7 @@ function animatelegs() {
 $('.lower-btns input[type="radio"]').on("change", function () {
   const isMobile = window.matchMedia("(max-width: 880px)").matches;
   const selectedValue = event.target.value;
-
+  applyMarginBasedOnChangeMobile()
   handleRadioChange(selectedValue);
   if (isMobile) {
     $("#color-picker").css("display", "flex");
