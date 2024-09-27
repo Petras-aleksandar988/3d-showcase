@@ -111,9 +111,8 @@ const arDiv = document.querySelector('.ar-div');
 arDiv.appendChild(arButton);
 
 arButton.addEventListener('click', () => {
-  console.log("AR button clicked");
+  $(".configurator-btn").click()
   if ($('#ARButton').text().trim() === 'AR NOT SUPPORTED') return
- console.log(oviniChair.model);
  
   oviniChair.model.visible = false;
   passModelToScene(oviniChair.model);
