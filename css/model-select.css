@@ -9,7 +9,7 @@ html {
   align-items: center;
   font-family: Arial, sans-serif;
   width: 100%;
-  background:  #f7f7f7;;
+  background:  #f5eaea;
 }
 
 .container {
@@ -40,7 +40,8 @@ html {
   width: 300px;
   width: 100%;
   cursor: pointer;
-  transition: border 0.3s ease
+  transition: border 0.3s ease;
+  background: #fff;
 }
 .model-name {
   align-self: flex-start;
